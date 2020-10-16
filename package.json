@@ -1,12 +1,9 @@
 {
-  "name": "GraphApp",
+  "name": "graph-app",
   "version": "0.0.0",
   "description": "We are love graphs!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "node index.js",
-    "start": "node lib/server-production",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
