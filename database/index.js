@@ -1,5 +1,6 @@
-const fs = require("fs");
+const { driver } = require('./driver');
 
-module.exports.addUser = (userInfo, callback) => {
-    fs.appendFile("./output.txt", userInfo.name + "\n", callback);
-};
+function clearDatabase() {
+    driver.session().run('MATCH (n) DETACH DELETE n')
+    .catch((err) => console.log(err));
+}
