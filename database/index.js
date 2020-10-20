@@ -14,6 +14,6 @@ async function initialize() {
         .catch(err => console.log(err));
 }
 
-await clearDatabase();
-await initialize();
-require('./api/user').createUser(new UserInfo('Folleach', 'Andrey', null, 'a@a.a', 'hashedpass', 'asdasd'));
+initialize();
+
+require('./examples');
