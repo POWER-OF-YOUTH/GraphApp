@@ -1,19 +1,19 @@
-const { driver } = require('./driver');
-const { UserInfo } = require('./objects');
+const user = require("./api/user");
+const driver = require('./driver');
 
-async function clearDatabase() {
-    await driver.session().run('MATCH (n) DETACH DELETE n')
-        .catch((err) => console.log(err));
+function clearDatabase(callback) { // Здесь коллбеку п
+    driver.session().run('MATCH (n) DETACH DELETE n')
+        .then(response => callback(response, null), err => callback(null, err));
 }
 
-async function initialize() {
+function initialize(callback) {
     const session = driver.session();
-    await session.run('CREATE INDEX ON :User(nickname)')
-        .catch(err => console.log(err));
-    await session.run('CREATE INDEX ON :User(token)')
-        .catch(err => console.log(err));
+    session.run('CREATE INDEX ON :User(login)')
+        .then(response => callback(response, null), err => callback(null, err))
+    session.run('CREATE INDEX ON :User(token)')
+        .then(response => callback(response, null), err => callback(null, err))
 }
 
-initialize();
-
-require('./examples');
+module.exports.user = user;
+module.exports.initialize = initialize;
+module.exports.clearDatabase = clearDatabase;

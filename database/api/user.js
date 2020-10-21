@@ -1,27 +1,30 @@
-const { driver } = require('../driver');
+const driver = require('../driver');
 
-async function createUser(userInfo) {
-    await driver.session().run('CREATE (n:User) SET n = {user}', { user: userInfo })
-        .catch(err => console.log(err));
+function createUser(userInfo, callback) {
+    let data = driver
+        .session()
+        .run('CREATE (n:User) SET n = {user}', { user: userInfo })
+        .then(data => callback(data, null), err => callback(null, err));
 }
 
-async function getByNick(nickname) {
-    return await getBy('nickname', nickname.toLowerCase());
+function getByLogin(login, callback) {
+    getBy('nickname', login, callback);
 }
 
-async function getByToken(token) {
-    return await getBy('token', token);
+function getByToken(token, callback) {
+    getBy('token', token, callback);
 }
 
 // Private
-async function getBy(by, value) {
-    const user = await driver.session().run(`MATCH (n:User {${by}: {value}}) RETURN n`, { value })
-        .catch(err => console.log(err));
-    return user.records[0] && user.records[0].get('n').properties;
-}
+function getBy(by, value, callback) {
+    let user = driver
+        .session()
+        .run(`MATCH (n:User {${by}: {value}}) RETURN n`, { value })
+        .then(data => callback(data, null), err => callback(null, err));
+};
 
 module.exports = {
     createUser,
-    getByNick,
+    getByLogin,
     getByToken
 }
