@@ -13,6 +13,13 @@ class UserInfo {
     }
 }
 
+class Node {
+    constructor (nodeId) {
+        this.nodeId = nodeId;
+    }
+}
+
 module.exports = {
-    UserInfo
+    UserInfo,
+    Node
 };
