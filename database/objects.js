@@ -1,18 +1,70 @@
+//@ts-check
+
+const crypto = require("crypto");
+const tokenSalt = 'power_of_youth';
+const passwordSalt = 'htuoy';
 // Объекты эквиваленты объектам из базы данных
 
 class UserInfo {
-    constructor(nickname, name, surname, email, password, token)
+    constructor(login, name, surname, mail, password)
     {
-        this.nickname = nickname.toLowerCase();
-        this.email = email;
+        this.login = login;
+        this.mail = mail;
         this.name = name;
         this.surname = surname;
-        this.email = email;
         this.password = password;
-        this.token = token;
+    };   
+}
+
+/**
+ * 
+ * @param {UserInfo} userInfo 
+ */
+function checkFilling(userInfo) {
+    return new Promise(
+        (resolve, reject) => {
+            let hasUndefinedKeys = false;
+            let undefinedKeys = {};
+            for (let key in userInfo) {
+                if (userInfo[key] == undefined) {
+                    undefinedKeys[key] = "undefined";
+                    hasUndefinedKeys = true;
+                }
+            }
+            if(hasUndefinedKeys)
+                reject(undefinedKeys);
+            else
+                resolve();
+    });
+} 
+
+class TokenGenerator {
+    /**
+     * 
+     * @param {string} login 
+     * @param {string} password 
+     * @return {string} md5
+     */
+    generateFrom = (login, password) => {
+        return crypto.createHash('md5').update(login + password + tokenSalt).digest('hex');
+    };
+}
+
+class PasswordHasher {
+    /**
+     * 
+     * @param {string} password 
+     */
+    getHash = (password) => {
+        if(password == undefined)
+            return undefined;
+        return crypto.createHash('md5').update(password + passwordSalt).digest('hex');
     }
 }
 
 module.exports = {
-    UserInfo
+    UserInfo,
+    TokenGenerator,
+    PasswordHasher,
+    checkFilling
 };
