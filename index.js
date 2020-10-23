@@ -15,6 +15,8 @@ app.get("/", (req, res) => {
 db.initialize((res, err) => {
     if(err)
         console.log(err);
+    else
+        console.log(res);
 });
 
 db.clearDatabase((res, err) => {

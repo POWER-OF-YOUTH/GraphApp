@@ -3,9 +3,9 @@
 const express = require("express");
 const db = require("../../database/");
 const objects = require("../../database/objects");
+const errors = require("../../database/errors");
 const tokenGenerator = new objects.TokenGenerator();
 const passwordHasher = new objects.PasswordHasher();
-const errors = require("../../database/errors");
 
 /**
  * 
@@ -17,22 +17,14 @@ function reportError(response, error)
     response.send({message: error.message});
 }
 
-module.exports.login = (req, res) => { //Тестовая функция возврающая данные обратно пользователю.
-    let tokenStruct = {};
-    db.user.getByLogin(req.query.login, (response, err) => {
-        if(err)
-            reportError(res, err);
-        else
-        {
-            if(passwordHasher.getHash(req.query.password) == response.password)
-            {
-                tokenStruct["token"] = response.token;
-                res.send(tokenStruct);
-            }
-            else
-                reportError(res, errors.missingPassword);
-        }
-    });
+module.exports.login = (req, res) => {
+    db.user.getByLogin(req.query.login)
+        .then(response => {
+            if(passwordHasher.getHash(req.query.password) != response.password)
+                throw errors.missingPassword;
+            res.send({token: response.token});
+        })
+        .catch(err => reportError(res, err));
 };  
 
 module.exports.register = (req, res) => {
@@ -46,25 +38,15 @@ module.exports.register = (req, res) => {
     objects
         .checkFilling(userInfo)
         .then(() => {
-            db.user.createUser(userInfo, token, (response, err) => { 
-                if(err)
-                {
-                    throw err;
-                } 
-                else
-                {
-                    res.send({message: "Succesful registration!"});
-                }
-            });
-    },
-    (unfilledData) => res.send(unfilledData));       
+            db.user.createUser(userInfo, token)
+                .then(response => res.send({message: "Succesful registration!"}))
+                .catch(err => reportError(res, err));
+            },
+        unfilledData => res.send(unfilledData));       
 };
 
-module.exports.data =(req, res) => {
-    db.user.getByToken(req.query.token, (response, err) => {
-        if(err)
-            reportError(res, err);
-        else
-            res.send(response);
-    });
+module.exports.data = (req, res) => {
+    db.user.getByToken(req.query.token)
+        .then(response => res.send(response))
+        .catch(err => reportError(res, err));
 };
