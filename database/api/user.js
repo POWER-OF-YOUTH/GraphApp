@@ -2,6 +2,7 @@ const driver = require('../driver');
 const objects = require('../objects');
 const errors = require('../errors');
 
+
 /**
  * 
  * @param {UserInfo} userInfo 
@@ -26,7 +27,7 @@ function getByLogin(login, callback) {
         if(err)
             callback(null, err); 
         else if(response.records.length == 0)
-            callback(null, errors.usersNotFound);
+            callback(null, errors.noResults);
         else
         {
             response = response.records[0]._fields[0].properties;
