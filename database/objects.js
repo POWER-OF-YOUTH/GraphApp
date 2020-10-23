@@ -24,15 +24,15 @@ function checkFilling(userInfo) {
     return new Promise(
         (resolve, reject) => {
             let hasUndefinedKeys = false;
-            let undefinedKeys = {};
+            let requireParam = [];
             for (let key in userInfo) {
                 if (userInfo[key] == undefined) {
-                    undefinedKeys[key] = "undefined";
+                    requireParam.push(key);
                     hasUndefinedKeys = true;
                 }
             }
             if(hasUndefinedKeys)
-                reject(undefinedKeys);
+                reject({requireParam: requireParam});
             else
                 resolve();
     });

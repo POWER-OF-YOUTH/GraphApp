@@ -41,7 +41,17 @@ function getByLogin(login, callback) {
  * @param {(response, err) => any} callback 
  */
 function getByToken(token, callback) {
-    getBy('token', token, callback);
+    getBy('token', token, (response, err) => {
+        if(err)
+            callback(null, err);
+        else if(response.records.length == 0)
+            callback(null, errors.noResults);
+        else
+        {
+            response = response.records[0]._fields[0].properties;
+            callback(response, null);
+        }
+    });
 }
 
 // Private

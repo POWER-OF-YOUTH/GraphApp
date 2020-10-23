@@ -57,6 +57,14 @@ module.exports.register = (req, res) => {
                 }
             });
     },
-    (unfilledData) => res.send(unfilledData));
-        
+    (unfilledData) => res.send(unfilledData));       
+};
+
+module.exports.data =(req, res) => {
+    db.user.getByToken(req.query.token, (response, err) => {
+        if(err)
+            reportError(res, err);
+        else
+            res.send(response);
+    });
 };
