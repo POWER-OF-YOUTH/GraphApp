@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(4),
         marginTop: theme.spacing(8),
         alignItems: 'center',
+    },
+    bottom: {
+        marginBottom: theme.spacing(4)
     }
 }));
 
@@ -53,8 +56,8 @@ function RegisterPage() {
     return (
         <Container maxWidth="sm">
             <Paper className={classes.paper}>
-                {response && response.code != 0 && <Alert severity="error">Произошла ошибка!</Alert>}
-                {response && response.code == 0 && <Alert severity="success">Успешная регистрация!</Alert>}
+                {response && response.code != 0 && <Alert className={classes.bottom} severity="error">Произошла ошибка!</Alert>}
+                {response && response.code == 0 && <Alert className={classes.bottom} severity="success">Успешная регистрация!</Alert>}
                 <Typography component="h1" variant="h5">
                     Регистрация
                 </Typography>

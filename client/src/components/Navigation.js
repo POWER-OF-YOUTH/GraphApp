@@ -18,6 +18,10 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../contexts/AccountContext';
 import LinkElement from './LinkElement';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import ProfileSummary from './ProfileSummary';
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -61,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
     },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -87,7 +90,7 @@ function Navigation() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-    const { account } = useAccount();
+    const { account, setAccount } = useAccount();
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -105,6 +108,12 @@ function Navigation() {
         handleMobileMenuClose();
     };
 
+    const handleMenuExit = () => {
+        setAnchorEl(null);
+        setAccount(null);
+        handleMobileMenuClose();
+    };
+
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
@@ -118,11 +127,12 @@ function Navigation() {
             keepMounted
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            onClose={handleMenuClose}>
+                <ProfileSummary close={handleMenuClose} />
         </Menu>
+        
+            // <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            // <MenuItem onClick={handleMenuExit}>Выйти</MenuItem>
     );
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -200,16 +210,6 @@ function Navigation() {
                     <div className={classes.sectionDesktop}>
                         {account && (
                             <>
-                                <IconButton aria-label="show 4 new mails" color="inherit">
-                                    <Badge badgeContent={0} color="secondary">
-                                        <MailIcon />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton aria-label="show 17 new notifications" color="inherit">
-                                    <Badge badgeContent={17} color="secondary">
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
                                 <IconButton
                                     edge="end"
                                     aria-controls={menuId}
