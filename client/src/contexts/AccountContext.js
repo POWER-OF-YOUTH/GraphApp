@@ -7,7 +7,7 @@ export const useAccount = () => {
 }
 
 export const AccountProvider = ({ children }) => {
-    const [account, setAccount] = useState({name: 'Daniil'});
+    const [account, setAccount] = useState();
 
     return (
         <AccountContext.Provider value={{account, setAccount}}>

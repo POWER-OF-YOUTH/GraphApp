@@ -1,13 +1,13 @@
+import { Container, Typography } from '@material-ui/core';
 import React from 'react';
 
 function MainPage() {
     return (
-        <div>
-            <h2>
-                Это главная страница
-        </h2>
-        <a href="/login">Вход</a>
-        </div>
+        <Container>
+            <Typography component="h1" variant="h4">
+                Просто текст, просто главная страница
+            </Typography>
+        </Container>
     );
 }
 
