@@ -1,13 +1,21 @@
 //@ts-check
 
 const crypto = require("crypto");
+const { unwatchFile } = require("fs");
 const tokenSalt = 'power_of_youth';
 const passwordSalt = 'htuoy';
 // Объекты эквиваленты объектам из базы данных
 
-class UserInfo {
-    constructor(login, name, surname, mail, password)
-    {
+class RegistrationInfo {
+    /**
+     * 
+     * @param {string} login 
+     * @param {string} name 
+     * @param {string} surname 
+     * @param {string} mail 
+     * @param {string} password 
+     */
+    constructor(login, name, surname, mail, password) {
         this.login = login;
         this.mail = mail;
         this.name = name;
@@ -16,25 +24,43 @@ class UserInfo {
     };   
 }
 
+class LoginInfo {
+    /**
+     * 
+     * @param {string} login 
+     * @param {string} password 
+     */
+    constructor(login, password) {
+        this.login = login;
+        this.password = password;
+    }
+}
+
 /**
  * 
- * @param {UserInfo} userInfo 
+ * @param {any} query 
+ * @param {Array<string>} requiredParameters
  */
-function checkFilling(userInfo) {
+function checkFilling(query, requiredParameters) {
     return new Promise(
         (resolve, reject) => {
             let hasUndefinedKeys = false;
             let requireParam = [];
-            for (let key in userInfo) {
-                if (userInfo[key] == undefined) {
+            let obj = {};
+            for (let i = 0; i < requiredParameters.length; i++) {
+                let key = requiredParameters[i];
+                if (query[key] == undefined) {
                     requireParam.push(key);
                     hasUndefinedKeys = true;
+                }
+                else {
+                    obj[key] = query[key];
                 }
             }
             if(hasUndefinedKeys)
                 reject({requireParam: requireParam});
             else
-                resolve();
+                resolve(obj);
     });
 } 
 
@@ -81,7 +107,8 @@ class PasswordHasher {
 }
 
 module.exports = {
-    UserInfo,
+    LoginInfo,
+    RegistrationInfo,
     TokenGenerator,
     PasswordHasher,
     ApiReport,
