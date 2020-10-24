@@ -3,28 +3,23 @@
 const express = require("express");
 const db = require("../../database/");
 const objects = require("../../database/objects");
-const errors = require("../../database/errors");
+const { ApiReport } = require("../../database/objects");
 const tokenGenerator = new objects.TokenGenerator();
 const passwordHasher = new objects.PasswordHasher();
 
-/**
- * 
- * @param {any} response 
- * @param {Error} error 
- */
-function reportError(response, error)
+function sendReport(res, apiReport)
 {
-    response.send({message: error.message});
+    res.send(apiReport);
 }
 
 module.exports.login = (req, res) => {
     db.user.getByLogin(req.query.login)
         .then(response => {
             if(passwordHasher.getHash(req.query.password) != response.password)
-                throw errors.missingPassword;
-            res.send({token: response.token});
+                throw new ApiReport("error", 2, "Missing password!");
+            sendReport(res, new objects.ApiReport("ok", 0, "Succesful Login!", {token: response.token}));
         })
-        .catch(err => reportError(res, err));
+        .catch(errReport => sendReport(res, errReport));
 };  
 
 module.exports.register = (req, res) => {
@@ -39,14 +34,17 @@ module.exports.register = (req, res) => {
         .checkFilling(userInfo)
         .then(() => {
             db.user.createUser(userInfo, token)
-                .then(response => res.send({message: "Succesful registration!"}))
-                .catch(err => reportError(res, err));
+                .then(response => sendReport(res, new objects.ApiReport("ok", 0, "Succesful registration!")))
+                .catch(errReport => sendReport(res, errReport));
             },
-        unfilledData => res.send(unfilledData));       
+        unfilledData => sendReport(res, new objects.ApiReport("error", 4, "Not enough data!", unfilledData)));       
 };
 
 module.exports.data = (req, res) => {
     db.user.getByToken(req.query.token)
-        .then(response => res.send(response))
-        .catch(err => reportError(res, err));
+        .then(response => {
+            response.password = undefined
+            sendReport(res, new objects.ApiReport("ok", 0, undefined, response))
+        }) //?
+        .catch(errReport => sendReport(res, errReport));
 };

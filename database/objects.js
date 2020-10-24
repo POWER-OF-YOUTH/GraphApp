@@ -50,6 +50,24 @@ class TokenGenerator {
     };
 }
 
+class ApiReport {
+    /**
+     * 
+     * @param {string} status 
+     * @param {number} code 
+     * @param {string} message 
+     * @param {any} data
+     */
+    constructor(status, code, message, data = undefined)
+    {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+        if(data != undefined)
+            this.data = data;
+    }
+}
+
 class PasswordHasher {
     /**
      * 
@@ -58,7 +76,7 @@ class PasswordHasher {
     getHash = (password) => {
         if(password == undefined)
             return undefined;
-        return crypto.createHash('md5').update(password + passwordSalt).digest('hex');
+        return crypto.createHash('sha256').update(password + passwordSalt).digest('hex');
     }
 }
 
@@ -66,5 +84,6 @@ module.exports = {
     UserInfo,
     TokenGenerator,
     PasswordHasher,
+    ApiReport,
     checkFilling
 };

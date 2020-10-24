@@ -1,5 +1,5 @@
 const driver = require('../driver');
-const errors = require('../errors');
+const objects = require('../objects');
 
 /**
  * 
@@ -22,7 +22,8 @@ function createUser(userInfo, token) {
 function getByLogin(login) {
     return getBy('login', login).then(response => {
         if(response.records.length == 0)
-            throw errors.missingLogin;
+            //throw errors.missingLogin;
+            throw new objects.ApiReport("error", 1, "Missing login!");
         else
             return response.records[0]._fields[0].properties;
     });
@@ -35,7 +36,7 @@ function getByLogin(login) {
 function getByToken(token) {
     return getBy('token', token).then(response => { 
         if(response.records.length == 0) 
-            throw errors.noResults;
+            throw new objects.ApiReport("error", 3, "The database could not find data!");
         else
             return response.records[0]._fields[0].properties;
     });
