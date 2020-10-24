@@ -36,8 +36,8 @@ module.exports.register = (req, res) => {
             db.user.createUser(userInfo, token)
                 .then(response => sendReport(res, new objects.ApiReport("ok", 0, "Succesful registration!")))
                 .catch(errReport => sendReport(res, errReport));
-            },
-        unfilledData => sendReport(res, new objects.ApiReport("error", 4, "Not enough data!", unfilledData)));       
+            })
+            .catch(unfilledData => sendReport(res, new objects.ApiReport("error", 4, "Not enough data!", unfilledData)));      
 };
 
 module.exports.data = (req, res) => {
