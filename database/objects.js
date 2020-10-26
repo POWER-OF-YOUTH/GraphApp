@@ -1,40 +1,8 @@
 //@ts-check
 
 const crypto = require("crypto");
-const { unwatchFile } = require("fs");
 const tokenSalt = 'power_of_youth';
 const passwordSalt = 'htuoy';
-// Объекты эквиваленты объектам из базы данных
-
-class RegistrationInfo {
-    /**
-     * 
-     * @param {string} login 
-     * @param {string} name 
-     * @param {string} surname 
-     * @param {string} mail 
-     * @param {string} password 
-     */
-    constructor(login, name, surname, mail, password) {
-        this.login = login;
-        this.mail = mail;
-        this.name = name;
-        this.surname = surname;
-        this.password = password;
-    };   
-}
-
-class LoginInfo {
-    /**
-     * 
-     * @param {string} login 
-     * @param {string} password 
-     */
-    constructor(login, password) {
-        this.login = login;
-        this.password = password;
-    }
-}
 
 /**
  * 
@@ -107,8 +75,6 @@ class PasswordHasher {
 }
 
 module.exports = {
-    LoginInfo,
-    RegistrationInfo,
     TokenGenerator,
     PasswordHasher,
     ApiReport,

@@ -27,6 +27,7 @@ module.exports.register = (req, res) => {
     let requiredParameters = ["login", "password", "mail", "name", "surname"];
     objects.checkFilling(req.query, requiredParameters)
         .then((obj) => {
+            //check existing
             let token = tokenGenerator.generateFrom(req.query.login, req.query.password);
             obj.password = passwordHasher.getHash(obj.password);
             db.user.createUser(obj, token)
