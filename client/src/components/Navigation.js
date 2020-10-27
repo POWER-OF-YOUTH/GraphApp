@@ -22,7 +22,9 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import ProfileSummary from './ProfileSummary';
-
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import cogIcon from "../icons/cog.svg";
+import {Avatar} from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
@@ -186,6 +188,11 @@ function Navigation() {
                         color="inherit"
                         aria-label="open drawer"
                     >
+                        <ButtonGroup color="green" aria-label="outlined primary button group">
+                            <Avatar src="/temp/123.jpg" className={classes.image} />
+                            <Button>Hello</Button>
+                            <Button>there</Button>
+                        </ButtonGroup>
                         <MenuIcon />
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap >
