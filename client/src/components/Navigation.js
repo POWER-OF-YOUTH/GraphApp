@@ -24,7 +24,10 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import ProfileSummary from './ProfileSummary';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import cogIcon from "../icons/cog.svg";
-import {Avatar} from "@material-ui/core";
+import filterIcon from "../icons/filter.svg";
+import {Avatar, SvgIcon} from "@material-ui/core";
+import ToolButton from './../components/ToolButton';
+
 const useStyles = makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
@@ -86,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
+    icolor: {
+        color: '#FFF'
+    }
 }));
 
 function Navigation() {
@@ -188,31 +194,16 @@ function Navigation() {
                         color="inherit"
                         aria-label="open drawer"
                     >
-                        <ButtonGroup color="green" aria-label="outlined primary button group">
-                            <Avatar src="/temp/123.jpg" className={classes.image} />
-                            <Button>Hello</Button>
-                            <Button>there</Button>
-                        </ButtonGroup>
                         <MenuIcon />
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap >
                         Ноды-ноды
                     </Typography>
 
+                    <ToolButton />
 
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div>
+                    <ToolButton />
+
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         {account && (

@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     },
     container: {
         padding: theme.spacing(1),
-        minWidth: theme.spacing(50)
+        minWidth: theme.spacing(60)
     }
 }));
 
@@ -45,7 +45,7 @@ function ProfileSummary({ close }) {
             <Grid item xs={12} sm container>
                 <Grid item xs container direction="column" spacing={2}>
                     <Grid item xs>
-                        <Typography gutterBottom variant="subtitle1">
+                        <Typography gutterBottom variant="h5">
                             {account.name} {account.surname}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
