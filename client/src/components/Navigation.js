@@ -200,9 +200,9 @@ function Navigation() {
                         Ноды-ноды
                     </Typography>
 
-                    <ToolButton />
-
-                    <ToolButton />
+                    <ToolButton
+                    typeoficon ={'filter'}/>
+                    <ToolButton typeoficon ={'cross'}/>
 
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
