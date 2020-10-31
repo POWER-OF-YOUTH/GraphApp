@@ -9,6 +9,7 @@ function EditorPage() {
         history.push('/');
         return null;
     }
+    
     return (
         <div>
             Тут будет сам редактор
