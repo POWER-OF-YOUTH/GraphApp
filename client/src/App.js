@@ -7,10 +7,12 @@ import MainPage from './pages/MainPage';
 import RegisterPage from './pages/RegisterPage';
 import EditorPage from './pages/EditorPage';
 import Navigation from './components/Navigation';
+import { NavigationProvider } from './contexts/NavigationContext';
 
 function App() {
   return (
     <AccountProvider>
+      <NavigationProvider>
         <Navigation />
         <Switch>
           <Route exact path="/" component={MainPage} />
@@ -18,6 +20,7 @@ function App() {
           <Route path="/register" component={RegisterPage} />
           <Route path="/editor" component={EditorPage} />
         </Switch>
+      </NavigationProvider>
     </AccountProvider>
   );
 }

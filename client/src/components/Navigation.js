@@ -27,6 +27,7 @@ import cogIcon from "../icons/cog.svg";
 import filterIcon from "../icons/filter.svg";
 import {Avatar, SvgIcon} from "@material-ui/core";
 import ToolButton from './../components/ToolButton';
+import { useNavigation } from '../contexts/NavigationContext';
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -143,6 +144,8 @@ function Navigation() {
             // <MenuItem onClick={handleMenuExit}>Выйти</MenuItem>
     );
 
+    const { tools } = useNavigation();
+
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
         <Menu
@@ -200,10 +203,7 @@ function Navigation() {
                         Ноды-ноды
                     </Typography>
 
-                    <ToolButton typeoficon ={'cursor'}/>
-                    <ToolButton typeoficon ={'pencil'}/>
-                    <ToolButton typeoficon ={'pencil-outline'}/>
-                    <ToolButton typeoficon ={'filter'}/>
+                    {tools}
 
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
