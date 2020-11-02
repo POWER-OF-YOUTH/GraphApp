@@ -1,7 +1,6 @@
 //@ts-check
 
 const driver = require('../driver');
-const objects = require('../objects');
 
 /**
  * 
