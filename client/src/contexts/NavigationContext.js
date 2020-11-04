@@ -8,9 +8,10 @@ export const useNavigation = () => {
 
 export const NavigationProvider = ({ children }) => {
     const [tools, setTools] = useState();
+    const [rightDrawer, setRightDrawer] = useState();
 
     return (
-        <NavigationContext.Provider value={{tools, setTools}}>
+        <NavigationContext.Provider value={{tools, setTools, rightDrawer, setRightDrawer}}>
             { children }
         </NavigationContext.Provider>
     );

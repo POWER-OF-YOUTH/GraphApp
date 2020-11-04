@@ -13,13 +13,14 @@ function App() {
   return (
     <AccountProvider>
       <NavigationProvider>
-        <Navigation />
+        <Navigation>
         <Switch>
           <Route exact path="/" component={MainPage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/editor" component={EditorPage} />
         </Switch>
+        </Navigation>
       </NavigationProvider>
     </AccountProvider>
   );

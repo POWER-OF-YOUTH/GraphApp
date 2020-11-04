@@ -3,17 +3,30 @@ import ToolButton from '../components/ToolButton';
 import { useAccount } from '../contexts/AccountContext';
 import { useNavigation } from '../contexts/NavigationContext';
 import history from '../history';
+import Editor from '../components/Editor';
+import { Button } from '@material-ui/core';
 
 function EditorPage() {
     const { account } = useAccount();
-    const { setTools } = useNavigation();
+    const { setTools, setRightDrawer } = useNavigation();
+
     useEffect(() => {
         setTools([
-        <ToolButton typeoficon={'cursor'}/>,
-        <ToolButton typeoficon={'pencil'}/>,
-        <ToolButton typeoficon={'pencil-outline'}/>,
-        <ToolButton typeoficon={'filter'}/>
-    ]);
+            <ToolButton typeoficon={'cursor'} hint="Интсрумент выделения" />,
+            <ToolButton typeoficon={'pencil'} hint="Инструмент узлов" />,
+            <ToolButton typeoficon={'pencil-outline'} hint="Инструмент связей"/>,
+            <ToolButton typeoficon={'filter'} hint="Фильтры" />
+        ]);
+        setRightDrawer([
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>Бан</Button>
+        ])
     }, []);
 
     if (!account)
@@ -25,7 +38,7 @@ function EditorPage() {
     
     return (
         <div>
-            Тут будет сам редактор
+            <Editor />
         </div>
     );
 }

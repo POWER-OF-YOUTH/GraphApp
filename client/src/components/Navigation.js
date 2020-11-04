@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
+import { Drawer, List, ListItem, Divider, ListItemIcon, ListItemText, CssBaseline } from '@material-ui/core';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -25,9 +27,11 @@ import ProfileSummary from './ProfileSummary';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import cogIcon from "../icons/cog.svg";
 import filterIcon from "../icons/filter.svg";
-import {Avatar, SvgIcon} from "@material-ui/core";
+import { Avatar, SvgIcon } from "@material-ui/core";
 import ToolButton from './../components/ToolButton';
 import { useNavigation } from '../contexts/NavigationContext';
+
+const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -92,10 +96,32 @@ const useStyles = makeStyles((theme) => ({
     },
     icolor: {
         color: '#FFF'
-    }
+    },
+    root: {
+        display: 'flex',
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
+      drawerPaper: {
+        width: drawerWidth,
+    },
+    drawerContainer: {
+        overflow: 'auto',
+    },
+    toolbar: theme.mixins.toolbar,
+    content: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.default,
+      padding: theme.spacing(3),
+    },
 }));
 
-function Navigation() {
+function Navigation({children}) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -137,14 +163,14 @@ function Navigation() {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}>
-                <ProfileSummary close={handleMenuClose} />
+            <ProfileSummary close={handleMenuClose} />
         </Menu>
-        
-            // <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            // <MenuItem onClick={handleMenuExit}>Выйти</MenuItem>
+
+        // <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+        // <MenuItem onClick={handleMenuExit}>Выйти</MenuItem>
     );
 
-    const { tools } = useNavigation();
+    const { tools, rightDrawer } = useNavigation();
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
@@ -188,8 +214,9 @@ function Navigation() {
     );
 
     return (
-        <div className={classes.grow}>
-            <AppBar position="static">
+        <div className={classes.root}>
+            <CssBaseline />
+            <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
                     <IconButton
                         edge="start"
@@ -239,6 +266,25 @@ function Navigation() {
                     </div>
                 </Toolbar>
             </AppBar>
+
+            <main className={classes.content}>
+            <div className={classes.toolbar} />
+                {children}
+            </main>
+
+            {rightDrawer && <Drawer
+                className={classes.drawer}
+                variant="permanent"
+                anchor="right"
+                classes={{
+                    paper: classes.drawerPaper,
+                }}
+            >
+                <Toolbar />
+                <div className={classes.drawerContainer}>
+                    {rightDrawer}
+                </div>
+            </Drawer>}
             {renderMobileMenu}
             {renderMenu}
         </div>);
