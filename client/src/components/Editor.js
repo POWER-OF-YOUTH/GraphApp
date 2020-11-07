@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useAppEditor } from '../contexts/EditorContext';
 import { useNavigation } from '../contexts/NavigationContext';
 import ToolButton from './ToolButton';
+import TestGraph from './../components/TestGraph';
 
 function Editor() {
     const { setTools, setRightDrawer } = useNavigation();
@@ -30,7 +31,7 @@ function Editor() {
     }, []);
 
     return (<div>
-        
+            <TestGraph/>
     </div>
     );
 }
