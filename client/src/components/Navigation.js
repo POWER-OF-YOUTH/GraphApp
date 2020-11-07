@@ -106,8 +106,8 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-      },
-      drawerPaper: {
+    },
+    drawerPaper: {
         width: drawerWidth,
     },
     drawerContainer: {
@@ -117,7 +117,6 @@ const useStyles = makeStyles((theme) => ({
     content: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.default,
-      padding: theme.spacing(3),
     },
 }));
 
@@ -268,7 +267,7 @@ function Navigation({children}) {
             </AppBar>
 
             <main className={classes.content}>
-            <div className={classes.toolbar} />
+                <div className={classes.toolbar} />
                 {children}
             </main>
 

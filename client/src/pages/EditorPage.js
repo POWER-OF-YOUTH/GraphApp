@@ -16,7 +16,6 @@ function EditorPage() {
         return null;
     }
     
-    
     return (
         <div>
             <EditorProvider>
