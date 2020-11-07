@@ -1,49 +1,35 @@
-import { Grid, Paper, Drawer, List, ListItem, Divider, ListItemIcon, ListItemText, Toolbar, Typography, CssBaseline, makeStyles } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import React from 'react';
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex'
-    },
-    paper: {
-        textAlign: 'center',
-    },
-}));
+import { Button } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { useAppEditor } from '../contexts/EditorContext';
+import { useNavigation } from '../contexts/NavigationContext';
+import ToolButton from './ToolButton';
 
 function Editor() {
-    const classes = useStyles();
+    const { setTools, setRightDrawer } = useNavigation();
+    const { connect } = useAppEditor();
 
-    return (<div className={classes.root}>
-        <CssBaseline />
+    connect('http://localhost:7532/');
 
-        <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>xs=12</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-      </Grid>
+    useEffect(() => {
+        setTools([
+            <ToolButton typeoficon={'cursor'} hint="Интсрумент выделения" />,
+            <ToolButton typeoficon={'pencil'} hint="Инструмент узлов" />,
+            <ToolButton typeoficon={'pencil-outline'} hint="Инструмент связей"/>,
+            <ToolButton typeoficon={'filter'} hint="Фильтры" />
+        ]);
+        setRightDrawer([
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>asdasd</Button>,
+            <Button>Бан</Button>
+        ])
+    }, []);
 
+    return (<div>
         
     </div>
     );
