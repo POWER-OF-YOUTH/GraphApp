@@ -4,6 +4,7 @@ import { useAppEditor } from '../contexts/EditorContext';
 import { useNavigation } from '../contexts/NavigationContext';
 import ToolButton from './ToolButton';
 import TestGraph from './../components/TestGraph';
+import EditorRightMenuTab from './EditorRightMenuTab';
 
 function Editor() {
     const { setTools, setRightDrawer } = useNavigation();
@@ -19,14 +20,25 @@ function Editor() {
             <ToolButton typeoficon={'filter'} hint="Фильтры" />
         ]);
         setRightDrawer([
-            <Button>asdasd</Button>,
-            <Button>asdasd</Button>,
-            <Button>asdasd</Button>,
-            <Button>asdasd</Button>,
-            <Button>asdasd</Button>,
-            <Button>asdasd</Button>,
-            <Button>asdasd</Button>,
-            <Button>Бан</Button>
+            <div style={{height: 'calc(100vh - 64px)'}}>
+                <EditorRightMenuTab panels={[
+                    {
+                        title: 'Узлы',
+                        body: <div><Button>raz</Button><Button>dwa</Button></div>
+                    },
+                    {
+                        title: 'Связи',
+                        body: <div>Тут будут связи</div>
+                    }
+                ]} />
+                <EditorRightMenuTab panels={[
+                    {
+                        title: 'Свойства',
+                        body: <div>Свойственная панель</div>
+                    }
+                ]} />
+            </div>
+            
         ])
     }, []);
 
