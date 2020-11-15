@@ -1,4 +1,5 @@
 const user = require("./api/user");
+const graph = require("./api/graph");
 const driver = require('./driver');
 
 function clearDatabase(callback) {
@@ -34,5 +35,6 @@ function initialize(callback) {
 }
 
 module.exports.user = user;
+module.exports.graph = graph;
 module.exports.initialize = initialize;
 module.exports.clearDatabase = clearDatabase;

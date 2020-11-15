@@ -24,8 +24,7 @@ function isLoginExists(login) {
         .then(records => records.length > 0 ? true : false, err => { throw err; });
 }
 
-module.exports.register = (req, res) => 
-    apiTools.parameterizedHandler(["login", "password", "mail", "name", "surname"], req, res, (obj, req, res) => {
+module.exports.register = apiTools.parameterizedHandler(["login", "password", "mail", "name", "surname"], (obj, req, res) => {
         Promise.all([isLoginExists(obj.login), isMailExists(obj.mail)]).then(results => {
             if(results[0]) {
                 apiTools.sendReport(res, new ApiReport("error", 5, "Login already exists!"));
@@ -40,13 +39,12 @@ module.exports.register = (req, res) =>
             let token = apiTools.generateTokenFrom(req.query.login, req.query.password);
             obj.password = apiTools.getPasswordHash(obj.password);
             db.user.createUser(obj, token)
-                .then(response => apiTools.sendReport(res, new ApiReport("ok", 0, "Succesful registration!")))
+                .then(response => apiTools.sendReport(res, new ApiReport("ok", 0, "Successful registration!")))
                 .catch(errReport => apiTools.sendReport(res, errReport)) 
         });
 });
 
-module.exports.login = (req, res) => 
-    apiTools.parameterizedHandler(["login", "password"], req, res, (obj, req, res) => {
+module.exports.login = apiTools.parameterizedHandler(["login", "password"], (obj, req, res) => {
         db.user.getBy("login", obj.login)
             .then(records => {
                 if(records.length == 0)
@@ -57,13 +55,12 @@ module.exports.login = (req, res) =>
             .then(properties => {
                 if(apiTools.getPasswordHash(obj.password) != properties.password)
                     throw new ApiReport("error", 2, "Missing password!");
-                apiTools.sendReport(res, new ApiReport("ok", 0, "Succesful Login!", {token: properties.token}))})
+                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful Login!", {token: properties.token}))})
             .catch(errReport => apiTools.sendReport(res, errReport))
 });
 
 
-module.exports.data = (req, res) => 
-    apiTools.parameterizedHandler(["token"], req, res, (obj, req, res) => {
+module.exports.data = apiTools.parameterizedHandler(["token"], (obj, req, res) => {
         db.user.getBy("token", obj.token)
             .then(records => { 
                 if(records.length == 0) 

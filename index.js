@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const appConfig = require('./configs/app.json');
+const clientSide = require("./socket/client-test");
 
 const api = require("./routes/api");
 const db = require("./database");
@@ -24,7 +25,6 @@ db.clearDatabase((res, err) => {
         console.log(err);
 });
 */
-
 
 app.listen(appConfig.port, appConfig.hostname, () => { 
     console.log(`Server is running on ${appConfig.hostname}:${appConfig.port}`);
