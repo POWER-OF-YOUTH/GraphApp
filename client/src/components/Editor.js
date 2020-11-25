@@ -9,15 +9,14 @@ import { IconButton } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddMark from './AddMark';
 import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
+import ConsturctorUzla from './ConstructorUzla';
 
- const spisok = (<div> <List component="nav" aria-label="main mailbox folders">
-     <ListItem button>
-        <ListItemText primary="Inbox" />
-     </ListItem>
-     <ListItem button>
-         <ListItemText primary="что-тотам" />
-     </ListItem></List>
-                </div>);
+ const spisok = (
+ <div>
+     <List component="nav" aria-label="main mailbox folders">
+        <ConsturctorUzla node={{id: 991}} onClick={e => console.log("Are you clicking, son?")} />
+    </List>
+</div>);
 function Editor() {
     const { setTools, setRightDrawer } = useNavigation();
     const { connect } = useAppEditor();

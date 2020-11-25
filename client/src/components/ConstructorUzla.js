@@ -1,5 +1,14 @@
 import React from 'react';
-function ConsturctorUzla({node} ) {
-    node.id
+import { ListItem, ListItemText } from '@material-ui/core';
 
+function ConsturctorUzla({ node, onClick }) {
+    return (
+    <div>
+        <ListItem button onClick={onClick}>
+           <ListItemText primary={node.id} />
+        </ListItem>
+    </div>
+    );
 }
+
+export default ConsturctorUzla;
