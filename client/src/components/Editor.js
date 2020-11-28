@@ -10,13 +10,20 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddMark from './AddMark';
 import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
 import ConsturctorUzla from './ConstructorUzla';
+import ConstructorRelation from'./ConstructorRelation';
 
- const spisok = (
+ const spisokNode = (
  <div>
      <List component="nav" aria-label="main mailbox folders">
         <ConsturctorUzla node={{id: 991}} onClick={e => console.log("Are you clicking, son?")} />
     </List>
 </div>);
+const spisokRelation = (
+    <div>
+        <List component="nav" aria-label="main mailbox folders">
+            <ConstructorRelation node={{id: 991}} node1 = {{id: 123}}  relation = {{id: 111}} onClick={e => console.log("Are you clicking, son?")} />
+        </List>
+    </div>);
 function Editor() {
     const { setTools, setRightDrawer } = useNavigation();
     const { connect } = useAppEditor();
@@ -39,11 +46,11 @@ function Editor() {
                 <EditorRightMenuTab panels={[
                     {
                         title: 'Узлы',
-                        body: spisok
+                        body: spisokNode
                     },
                     {
                         title: 'Связи',
-                        body: <div>Тут будут связи</div>
+                        body: spisokRelation
                     }
                 ]} />
                 <EditorRightMenuTab panels={[
