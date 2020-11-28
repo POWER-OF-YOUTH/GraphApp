@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppEditor } from '../contexts/EditorContext';
 import { useNavigation } from '../contexts/NavigationContext';
 import ToolButton from './ToolButton';
-import TestGraph from './../components/TestGraph';
+import GraphContainer from './GraphContainer';
 import EditorRightMenuTab from './EditorRightMenuTab';
 import { IconButton } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
@@ -65,8 +65,8 @@ function Editor() {
     }, []);
 
     return (<div>
-            <TestGraph/>
-            <AddMark opened={addMarkOpen} setOpen={setAddMarkOpen} />
+        <GraphContainer/>
+        <AddMark opened={addMarkOpen} setOpen={setAddMarkOpen} />
     </div>
     );
 }

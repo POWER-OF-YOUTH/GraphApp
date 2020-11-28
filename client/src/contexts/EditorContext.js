@@ -14,6 +14,23 @@ export const EditorProvider = ({ children }) => {
     }
 
     const [selectedTool, setSelectedTool] = useState('cursor');
+    const [marks, setMarks] = useState([
+        {
+            markType: 'Человек',
+            properties: [
+                {
+                    propertyName: 'Name',
+                    require: true,
+                    default: 'Name'
+                },
+                {
+                    propertyName: 'Age',
+                    require: false,
+                    default: 0
+                }
+            ]
+        }
+    ]);
 
     return (
         <EditorContext.Provider value={{connect, selectedTool, setSelectedTool}}>

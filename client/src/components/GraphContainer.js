@@ -4,6 +4,7 @@ import React from 'react';
 import cloneDeep from "lodash/cloneDeep";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from 'react';
+import { useAppEditor } from "../contexts/EditorContext";
 
 const graph = {
     nodes: [
@@ -21,7 +22,10 @@ const graph = {
     ]
 };
 
-function TestGraph() {
+let counter = 10;
+
+function GraphContainer() {
+    const { selectedTool } = useAppEditor();
     const [graphData, setGraphData] = useState(graph);
     const options = {
         autoResize: true,
@@ -35,6 +39,9 @@ function TestGraph() {
         edges: {
             color: "#000000",
             hoverWidth: 10,
+            physics: false
+        },
+        nodes: {
             physics: false
         },
         interaction: {
@@ -67,6 +74,24 @@ function TestGraph() {
         select: function (event) {
             var { nodes, edges } = event;
             console.log(nodes);
+        },
+        click: function(event) {
+            if (selectedTool == 'add-node')
+            {
+                const newGraph = {
+                    nodes: graphData.nodes.slice(),
+                    edges: graphData.edges
+                }
+                newGraph.nodes.push({
+                    id: ++counter,
+                    label:
+                    "Node",
+                    title: "node 5 tootip text",
+                    shape: 'circle',
+                    x: event.pointer.canvas.x,
+                    y: event.pointer.canvas.y });
+                setGraphData(newGraph);
+            }
         }
     };
 
@@ -77,5 +102,5 @@ function TestGraph() {
     );
 }
 
-export default TestGraph;
+export default GraphContainer;
 
