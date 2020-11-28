@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 
 const EditorContext = createContext();
@@ -13,8 +13,10 @@ export const EditorProvider = ({ children }) => {
 
     }
 
+    const [selectedTool, setSelectedTool] = useState('cursor');
+
     return (
-        <EditorContext.Provider value={{connect}}>
+        <EditorContext.Provider value={{connect, selectedTool, setSelectedTool}}>
             { children }
         </EditorContext.Provider>
     );

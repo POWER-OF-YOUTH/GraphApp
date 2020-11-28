@@ -35,7 +35,7 @@ function Editor() {
         setTools([
             <ToolButton typeoficon={'cursor'} hint="Интсрумент выделения" />,
             <ToolButton typeoficon={'pencil'} hint="Инструмент узлов" />,
-            <ToolButton typeoficon={'pencil-outline'} hint="Инструмент связей"/>,
+            <ToolButton typeoficon={'pencil-outline'} hint="Инструмент связей" />,
             <ToolButton typeoficon={'filter'} hint="Фильтры" />,
             <IconButton onClick={() => setAddMarkOpen(true) }>
                 <ArrowDownwardIcon />

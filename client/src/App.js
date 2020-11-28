@@ -8,20 +8,23 @@ import RegisterPage from './pages/RegisterPage';
 import EditorPage from './pages/EditorPage';
 import Navigation from './components/Navigation';
 import { NavigationProvider } from './contexts/NavigationContext';
+import { EditorProvider } from './contexts/EditorContext';
 
 function App() {
   return (
     <AccountProvider>
-      <NavigationProvider>
-        <Navigation>
-        <Switch>
-          <Route exact path="/" component={MainPage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
-          <Route path="/editor" component={EditorPage} />
-        </Switch>
-        </Navigation>
-      </NavigationProvider>
+      <EditorProvider>
+        <NavigationProvider>
+          <Navigation>
+          <Switch>
+            <Route exact path="/" component={MainPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
+            <Route path="/editor" component={EditorPage} />
+          </Switch>
+          </Navigation>
+        </NavigationProvider>
+      </EditorProvider>
     </AccountProvider>
   );
 }
