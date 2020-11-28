@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Typography, makeStyles, Radio, RadioGroup, Button, Checkbox, Paper } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -14,13 +15,10 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         marginTop: theme.spacing(2),
         alignItems: 'center',
-    },
-    bottom: {
-        
     }
 }));
 
-function PropertyEditor({ localId, property, setPropertyName, setRequired, setDefaultValue }) {
+function PropertyEditor({ localId, property, setPropertyName, setRequired, setDefaultValue, deleteProperty }) {
     const classes = useStyles();
 
     return (
@@ -32,6 +30,14 @@ function PropertyEditor({ localId, property, setPropertyName, setRequired, setDe
                     label="Необходимо указать"
                 />
                 <TextField id="in-default" label="Значение по-умолчанию" type="text" value={property.defaultValue} onChange={event => setDefaultValue(localId, event.target.value)} required />
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => deleteProperty(localId)}
+                >
+                    Удалить
+                </Button>
             </form>
         </Paper>
     );

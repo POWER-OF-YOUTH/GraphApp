@@ -42,6 +42,10 @@ function AddMark({ opened, setOpen }) {
         }));
     }
 
+    function deleteProperty(localId) {
+        setProperties(properties.filter((x, i) => i != localId));
+    }
+
     async function submit(event) {
         event.preventDefault();
         fetch(`http://localhost/api/user/login?login=a&password=z`)
@@ -84,6 +88,7 @@ function AddMark({ opened, setOpen }) {
                                     setPropertyName={(i, v) => setField(i, 'propertyName', v)}
                                     setDefaultValue={(i, v) => setField(i, 'defaultValue', v)}
                                     setRequired={(i, v) => setField(i, 'required', v)}
+                                    deleteProperty={deleteProperty}
                                 />
 
                             })}
