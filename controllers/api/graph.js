@@ -6,6 +6,7 @@ const db = require("../../database/");
 const server = require("../../socket");
 const apiTools = require("../../lib/apiTools");
 const ApiReport = require("../../lib/ApiReport");
+const { getRelatedNodes } = require("../../database/api/graph");
 
 /**
  * 
@@ -78,3 +79,36 @@ module.exports.createMark = apiTools.parameterizedHandler(["data"], async functi
 module.exports.createRelation = apiTools.parameterizedHandler(["from", "to", "name"], (obj, req, res) => {
     db.graph.createRelation(obj.from, obj.to, obj.name);
 });
+
+module.exports.deleteNode = apiTools.parameterizedHandler(["id"], (obj, req, res) => {
+    db.graph.deleteNode(obj.id);
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+});
+
+module.exports.deleteRelation = apiTools.parameterizedHandler(["from", "to", "name"], (obj, req, res) => {
+    db.graph.deleteRelation(obj.from, obj.to, obj.name);
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+});
+
+module.exports.getMarksInfo = async function body(req, res) {
+    let response = [];
+    let marks = await db.graph.getNodes("Mark");
+    for (let i = 0; i < marks.records.length; i++)
+    {
+        let relatedNodes = await getRelatedNodes(marks.records[i]["_fields"][0]["identity"]["low"], "property");
+
+        let mark = {};
+        mark["type"] = marks.records[i]["_fields"][0]["properties"]["type"];
+        mark["properties"] = [];
+
+        for (let j = 0; j < relatedNodes.records.length; j++)
+        {
+            mark["properties"].push(relatedNodes.records[0]["_fields"][0]["properties"]);
+        }
+
+        response.push(mark);
+    }
+
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
+};
+
