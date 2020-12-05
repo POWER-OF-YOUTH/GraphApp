@@ -21,7 +21,15 @@ function getBy(by, value) {
             .then(response => response.records);
 };
 
+async function isTokenExists(token) {
+    let response = await driver
+                        .session()
+                        .run(`MATCH (n) WHERE n.token="${token}" RETURN n`);
+    return response.records.length > 0;
+}
+
 module.exports = {
     createUser,
-    getBy
+    getBy,
+    isTokenExists
 }
