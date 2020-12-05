@@ -3,6 +3,10 @@ const app = express();
 const appConfig = require('./configs/app.json');
 const clientSide = require("./socket/client-test");
 
+const cors = require('cors');
+app.use(cors());
+app.options('*', cors());
+
 const api = require("./routes/api");
 const db = require("./database");
 
