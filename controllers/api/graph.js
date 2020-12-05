@@ -7,37 +7,13 @@ const server = require("../../socket");
 const apiTools = require("../../lib/apiTools");
 const ApiReport = require("../../lib/ApiReport");
 
-/**
- * 
- * @param {any} req 
- * @param {any} res 
- *//*
-module.exports.createMark = (req, res) => apiTools.parameterizedHandler(["type"], req, res, (obj, req, res) => {
-    db.graph.createNode(["Mark"], obj)
-        .then()
-        .catch();
-    console.log([1, 2, 3] instanceof Array);
-});*/
-/*
-{
-    type: "type_name",
-    properties: 
-    [
-        {
-            propertyName: "prop1"
-            require: true | false
-            default: "str" | number
-        },
-        {
-            propertyName: "prop2"
-            require: true | false
-            default: "str" | number
-        }
-    ]
-}
-*/
+module.exports.createMark = apiTools.parameterizedHandler(["token", "data"], async function body(obj, req, res) {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 999, "Wrong token!"));
+        return;
+    }
 
-module.exports.createMark = apiTools.parameterizedHandler(["data"], async function body(obj, req, res) {
     let data;
 
     try {
@@ -75,6 +51,67 @@ module.exports.createMark = apiTools.parameterizedHandler(["data"], async functi
     apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
 }); 
 
-module.exports.createRelation = apiTools.parameterizedHandler(["from", "to", "name"], (obj, req, res) => {
+module.exports.createRelation = apiTools.parameterizedHandler(["token", "from", "to", "name"], async function body(obj, req, res) {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 999, "Wrong token!"));
+        return;
+    }
+
     db.graph.createRelation(obj.from, obj.to, obj.name);
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
 });
+<<<<<<< Updated upstream
+=======
+
+module.exports.deleteNode = apiTools.parameterizedHandler(["token", "id"], async function body(obj, req, res) {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 999, "Wrong token!"));
+        return;
+    }
+
+    db.graph.deleteNode(obj.id);
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+});
+
+module.exports.deleteRelation = apiTools.parameterizedHandler(["token", "from", "to", "name"], async function body(obj, req, res) {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 999, "Wrong token!"));
+        return;
+    }
+
+    db.graph.deleteRelation(obj.from, obj.to, obj.name);
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+});
+
+module.exports.getMarksInfo = apiTools.parameterizedHandler(["token"], async function body(obj, req, res) {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 999, "Wrong token!"));
+        return;
+    }
+
+    let response = [];
+    let marks = await db.graph.getNodes("Mark");
+    for (let i = 0; i < marks.records.length; i++)
+    {
+        let relatedNodes = await getRelatedNodes(marks.records[i]["_fields"][0]["identity"]["low"], "property");
+
+        let mark = {};
+        mark["type"] = marks.records[i]["_fields"][0]["properties"]["type"];
+        mark["properties"] = [];
+
+        for (let j = 0; j < relatedNodes.records.length; j++)
+        {
+            mark["properties"].push(relatedNodes.records[0]["_fields"][0]["properties"]);
+        }
+
+        response.push(mark);
+    }
+
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
+});
+
+>>>>>>> Stashed changes
