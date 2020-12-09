@@ -2,49 +2,74 @@
 
 const express = require("express");
 const db = require("../../database/");
-const objects = require("../../database/objects");
-const { ApiReport } = require("../../database/objects");
-const tokenGenerator = new objects.TokenGenerator();
-const passwordHasher = new objects.PasswordHasher();
 
-function sendReport(res, apiReport)
-{
-    res.send(apiReport);
+const apiTools = require("../../lib/apiTools");
+const ApiReport = require("../../lib/ApiReport");
+
+/**
+ * 
+ * @param {string} mail 
+ */
+function isMailExists(mail) {
+    return db.user.getBy('mail', mail)
+        .then(records => records.length > 0 ? true : false, err => { throw err; });
 }
 
-module.exports.login = (req, res) => {
-    db.user.getByLogin(req.query.login)
-        .then(response => {
-            if(passwordHasher.getHash(req.query.password) != response.password)
-                throw new ApiReport("error", 2, "Missing password!");
-            sendReport(res, new objects.ApiReport("ok", 0, "Succesful Login!", {token: response.token}));
-        })
-        .catch(errReport => sendReport(res, errReport));
-};  
+/**
+ * 
+ * @param {string} login 
+ */
+function isLoginExists(login) {
+    return db.user.getBy('login', login)
+        .then(records => records.length > 0 ? true : false, err => { throw err; });
+}
 
-module.exports.register = (req, res) => {
-    let userInfo = new objects.UserInfo(
-        req.query.login,
-        req.query.name,
-        req.query.surname,
-        req.query.mail,
-        passwordHasher.getHash(req.query.password));
-    let token = tokenGenerator.generateFrom(userInfo.login, userInfo.password);
-    objects
-        .checkFilling(userInfo)
-        .then(() => {
-            db.user.createUser(userInfo, token)
-                .then(response => sendReport(res, new objects.ApiReport("ok", 0, "Succesful registration!")))
-                .catch(errReport => sendReport(res, errReport));
-            })
-            .catch(unfilledData => sendReport(res, new objects.ApiReport("error", 4, "Not enough data!", unfilledData)));      
-};
+module.exports.register = apiTools.parameterizedHandler(["login", "password", "mail", "name", "surname"], (obj, req, res) => {
+        Promise.all([isLoginExists(obj.login), isMailExists(obj.mail)]).then(results => {
+            if(results[0]) {
+                apiTools.sendReport(res, new ApiReport("error", 5, "Login already exists!"));
+                return;
+            }
 
-module.exports.data = (req, res) => {
-    db.user.getByToken(req.query.token)
-        .then(response => {
-            response.password = undefined
-            sendReport(res, new objects.ApiReport("ok", 0, undefined, response))
-        }) //?
-        .catch(errReport => sendReport(res, errReport));
-};
+            if(results[1]) {
+                apiTools.sendReport(res, new ApiReport("error", 6, "Mail already exists!"));
+                return;
+            }
+            
+            let token = apiTools.generateTokenFrom(req.query.login, req.query.password);
+            obj.password = apiTools.getPasswordHash(obj.password);
+            db.user.createUser(obj, token)
+                .then(response => apiTools.sendReport(res, new ApiReport("ok", 0, "Successful registration!")))
+                .catch(errReport => apiTools.sendReport(res, errReport)) 
+        });
+});
+
+module.exports.login = apiTools.parameterizedHandler(["login", "password"], (obj, req, res) => {
+        db.user.getBy("login", obj.login)
+            .then(records => {
+                if(records.length == 0)
+                    throw new ApiReport("error", 1, "Missing login!");
+                else
+                    //@ts-ignore
+                    return records[0]._fields[0].properties; })
+            .then(properties => {
+                if(apiTools.getPasswordHash(obj.password) != properties.password)
+                    throw new ApiReport("error", 2, "Missing password!");
+                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful Login!", {token: properties.token}))})
+            .catch(errReport => apiTools.sendReport(res, errReport))
+});
+
+
+module.exports.data = apiTools.parameterizedHandler(["token"], (obj, req, res) => {
+        db.user.getBy("token", obj.token)
+            .then(records => { 
+                if(records.length == 0) 
+                    throw new ApiReport("error", 3, "Missing token!");
+                else
+                    //@ts-ignore
+                    return records[0]._fields[0].properties})
+            .then(properties => {
+                properties.password = undefined
+                apiTools.sendReport(res, new ApiReport("ok", 0, undefined, properties))})
+            .catch(errReport => apiTools.sendReport(res, errReport));
+});
