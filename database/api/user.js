@@ -21,7 +21,6 @@ function getBy(by, value) {
             .then(response => response.records);
 };
 
-
 async function isTokenExists(token) {
     let response = await driver
                         .session()
