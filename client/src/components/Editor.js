@@ -11,6 +11,7 @@ import AddMark from './AddMark';
 import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
 import ConsturctorUzla from './ConstructorUzla';
 import ConstructorRelation from'./ConstructorRelation';
+import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
 
  const spisokNode = (
  <div>
@@ -28,13 +29,14 @@ function Editor() {
     const { setTools, setRightDrawer } = useNavigation();
     const { connect } = useAppEditor();
     const [addMarkOpen, setAddMarkOpen] = useState(false);
+    const [activeMarkOpen, setActiveMarkOpen] = useState(false);
 
     connect('http://localhost:7532/');
 
     useEffect(() => {
         setTools([
             <ToolButton typeoficon={'cursor'} hint="Интсрумент выделения" />,
-            <ToolButton typeoficon={'add-node'} hint="Инструмент узлов" />,
+            <ToolButton onClick={() => setActiveMarkOpen(true)} typeoficon={'add-node'} hint="Инструмент узлов" />,
             <ToolButton typeoficon={'add-relation'} hint="Инструмент связей" />,
             <ToolButton typeoficon={'filter'} hint="Фильтры" />,
             <IconButton onClick={() => setAddMarkOpen(true) }>
@@ -64,9 +66,11 @@ function Editor() {
         ])
     }, []);
 
-    return (<div>
+    return (
+    <div>
         <GraphContainer/>
         <AddMark opened={addMarkOpen} setOpen={setAddMarkOpen} />
+        <ActiveMarkSelectorWindow opened={activeMarkOpen} setOpen={setActiveMarkOpen} />
     </div>
     );
 }

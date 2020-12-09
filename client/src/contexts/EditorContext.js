@@ -14,10 +14,9 @@ export const EditorProvider = ({ children }) => {
     }
 
     const [selectedTool, setSelectedTool] = useState('cursor');
-    const [marks, setMarks] = useState([
-        {
-            markType: 'Человек',
-            properties: [
+    const [marks, setMarks] = useState({container: new Map()});
+    const x = {
+            человек: [
                 {
                     propertyName: 'Name',
                     require: true,
@@ -30,10 +29,9 @@ export const EditorProvider = ({ children }) => {
                 }
             ]
         }
-    ]);
 
     return (
-        <EditorContext.Provider value={{connect, selectedTool, setSelectedTool}}>
+        <EditorContext.Provider value={{connect, selectedTool, setSelectedTool, marks, setMarks}}>
             { children }
         </EditorContext.Provider>
     );
