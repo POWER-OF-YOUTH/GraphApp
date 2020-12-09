@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { TextField, Typography, makeStyles } from '@material-ui/core';
+import { TextField, makeStyles } from '@material-ui/core';
 import PropertyEditor from './PropertyEditor';
+import { useAccount } from '../contexts/AccountContext';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,13 +21,14 @@ let counter = 2;
 
 function AddMark({ opened, setOpen }) {
     const classes = useStyles();
+    const { account } = useAccount();
     const [name, setName] = useState('');
     const [response, setResponse] = useState(null);
     const [properties, setProperties] = useState(
         [{
             propertyName: '',
-            required: true,
-            defaultValue: null
+            require: true,
+            default: null
         }]
     );
 
@@ -37,8 +39,8 @@ function AddMark({ opened, setOpen }) {
     function addProperty(event) {
         setProperties(properties.concat({
             propertyName: '',
-            required: false,
-            defaultValue: null
+            require: false,
+            default: null
         }));
     }
 
@@ -48,7 +50,11 @@ function AddMark({ opened, setOpen }) {
 
     async function submit(event) {
         event.preventDefault();
-        fetch(`http://localhost/api/user/login?login=a&password=z`)
+        const jsonchik = {
+            type: name,
+            properties: properties
+        };
+        fetch(`http://localhost/api/graph/createMark?token=${account.token}&data=${JSON.stringify(jsonchik)}`)
             .then(response => response.json())
             .then(json => setResponse(json));
     }
@@ -76,18 +82,18 @@ function AddMark({ opened, setOpen }) {
                         Создание метки которая будет использоваться для назначений свойств для узлов и связей
             </DialogContentText>
                     <div>
-                        <p>{JSON.stringify(response)}</p>
+                        {response && response.code == 0 && <MuiAlert severity="success" elevation={6} variant="filled">Успешно добавлено</MuiAlert>}
+                        {response && response.code != 0 && <MuiAlert severity="error" elevation={6} variant="filled">Произошла ошибка: {response.message}</MuiAlert>}
                         <form className={classes.root} onSubmit={submit}>
                             <TextField id="in-name" label="Название" value={name} onChange={event => setName(event.target.value)} required />
                             {properties.map(function (property, index) {
-
                                 return <PropertyEditor
                                     property={property}
                                     localId={index}
                                     key={index}
                                     setPropertyName={(i, v) => setField(i, 'propertyName', v)}
-                                    setDefaultValue={(i, v) => setField(i, 'defaultValue', v)}
-                                    setRequired={(i, v) => setField(i, 'required', v)}
+                                    setDefaultValue={(i, v) => setField(i, 'default', v)}
+                                    setRequired={(i, v) => setField(i, 'require', v)}
                                     deleteProperty={deleteProperty}
                                 />
 

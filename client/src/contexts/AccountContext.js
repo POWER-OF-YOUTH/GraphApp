@@ -7,11 +7,7 @@ export const useAccount = () => {
 }
 
 export const AccountProvider = ({ children }) => {
-    const [account, setAccount] = useState({
-        login: 'Bot',
-        name: 'Michael',
-        surname: 'Botov'
-    });
+    const [account, setAccount] = useState(null);
 
     return (
         <AccountContext.Provider value={{account, setAccount}}>
