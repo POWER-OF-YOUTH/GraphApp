@@ -1,6 +1,5 @@
 //@ts-check
 
-
 const express = require("express");
 const db = require("../../database/");
 const server = require("../../socket");
@@ -61,11 +60,6 @@ module.exports.createRelation = apiTools.parameterizedHandler(["token", "from", 
     db.graph.createRelation(obj.from, obj.to, obj.name);
     apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
 });
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> master
 
 module.exports.deleteNode = apiTools.parameterizedHandler(["token", "id"], async function body(obj, req, res) {
     if(!(await db.user.isTokenExists(obj.token)))
@@ -100,11 +94,7 @@ module.exports.getMarksInfo = apiTools.parameterizedHandler(["token"], async fun
     let marks = await db.graph.getNodes("Mark");
     for (let i = 0; i < marks.records.length; i++)
     {
-<<<<<<< HEAD
-        let relatedNodes = await getRelatedNodes(marks.records[i]["_fields"][0]["identity"]["low"], "property");
-=======
         let relatedNodes = await db.graph.getRelatedNodes(marks.records[i]["_fields"][0]["identity"]["low"], "property");
->>>>>>> master
 
         let mark = {};
         mark["type"] = marks.records[i]["_fields"][0]["properties"]["type"];
@@ -120,8 +110,3 @@ module.exports.getMarksInfo = apiTools.parameterizedHandler(["token"], async fun
 
     apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
 });
-
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> master
