@@ -6,27 +6,10 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from 'react';
 import { useAppEditor } from "../contexts/EditorContext";
 
-const graph = {
-    nodes: [
-        { id: 1, label: "Node 1", title: "node 1 tootip text", group: 1 },
-        { id: 2, label: "Node 2", title: "node 2 tootip text", group: 1 },
-        { id: 3, label: "Node 3", title: "node 3 tootip text", group: 2, shape: 'hexagon' },
-        { id: 4, label: "Node 4", title: "node 4 tootip text", color: '#FF0000', group: 2 },
-        { id: 5, label: "Node 5", title: "node 5 tootip text", shape: 'triangle' }
-    ],
-    edges: [
-        { from: 1, to: 2 },
-        { from: 1, to: 3 },
-        { from: 2, to: 4, dashes: true, hoverWidth: 4 },
-        { from: 2, to: 5, label: 'asdasdasds' }
-    ]
-};
-
 let counter = 10;
 
 function GraphContainer() {
-    const { selectedTool } = useAppEditor();
-    const [graphData, setGraphData] = useState(graph);
+    const { selectedTool, graphData, setGraphData, activeMarks } = useAppEditor();
     const options = {
         autoResize: true,
         height: '100%',
@@ -84,8 +67,7 @@ function GraphContainer() {
                 }
                 newGraph.nodes.push({
                     id: ++counter,
-                    label:
-                    "Node",
+                    label: activeMarks.values().next().value,
                     title: "node 5 tootip text",
                     shape: 'circle',
                     x: event.pointer.canvas.x,
