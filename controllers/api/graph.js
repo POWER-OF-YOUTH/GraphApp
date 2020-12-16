@@ -169,7 +169,7 @@ module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], asy
 
         driver
                 .session()
-                .run(`CREATE (n:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData }).subscribe({
+                .run(`CREATE (n:Display:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData }).subscribe({
                     onCompleted: () => { apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!",)) }
                 })
 
