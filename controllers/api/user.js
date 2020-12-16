@@ -2,6 +2,7 @@
 
 const express = require("express");
 const db = require("../../database/");
+const driver = require("../../database/driver")
 
 const apiTools = require("../../lib/apiTools");
 const ApiReport = require("../../lib/ApiReport");
@@ -10,18 +11,34 @@ const ApiReport = require("../../lib/ApiReport");
  * 
  * @param {string} mail 
  */
-function isMailExists(mail) {
-    return db.user.getBy('mail', mail)
-        .then(records => records.length > 0 ? true : false, err => { throw err; });
+async function isMailExists(mail) {
+    let query = `
+        OPTIONAL MATCH (n) 
+        WHERE n.mail="${mail}" 
+        RETURN (n IS NOT null) AS exists LIMIT 1
+    `
+    let exists = (await driver.session().run(query))
+        .records[0]
+        .get("exists");
+    
+    return exists;
 }
 
 /**
  * 
  * @param {string} login 
  */
-function isLoginExists(login) {
-    return db.user.getBy('login', login)
-        .then(records => records.length > 0 ? true : false, err => { throw err; });
+async function isLoginExists(login) {
+    let query = `
+        OPTIONAL MATCH (n) 
+        WHERE n.login="${login}" 
+        RETURN (n IS NOT null) AS exists LIMIT 1
+    `
+    let exists = (await driver.session().run(query))
+        .records[0]
+        .get("exists");
+    
+    return exists;
 }
 
 module.exports.register = apiTools.parameterizedHandler(["login", "password", "mail", "name", "surname"], (obj, req, res) => {

@@ -5,6 +5,9 @@ const db = require("../../database/");
 const server = require("../../socket");
 const apiTools = require("../../lib/apiTools");
 const ApiReport = require("../../lib/ApiReport");
+const DatabaseWorker = require("../../database/DatabaseWorker");
+const driver = require("../../database/driver");
+const { Record } = require("neo4j-driver");
 
 module.exports.createMark = apiTools.parameterizedHandler(["token", "data"], async function body(obj, req, res) {
     if(!(await db.user.isTokenExists(obj.token)))
@@ -94,7 +97,8 @@ module.exports.getMarksInfo = apiTools.parameterizedHandler(["token"], async fun
     let marks = await db.graph.getNodes("Mark");
     for (let i = 0; i < marks.records.length; i++)
     {
-        let relatedNodes = await db.graph.getRelatedNodes(marks.records[i]["_fields"][0]["identity"]["low"], "property");
+        let id = marks.records[0].get("n")["identity"];
+        let relatedNodes = await db.graph.getRelatedNodes(id, "property");
 
         let mark = {};
         mark["type"] = marks.records[i]["_fields"][0]["properties"]["type"];
@@ -109,4 +113,91 @@ module.exports.getMarksInfo = apiTools.parameterizedHandler(["token"], async fun
     }
 
     apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
+});
+
+module.exports.getMarkInfo = apiTools.parameterizedHandler(["token", "type"], async (obj, req, res) => {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let isTypeExists = false;
+    let properties = [];
+    driver
+        .session()
+        .run(`MATCH (n:Mark)-[:property]->(m) WHERE n.type="${obj.type}" RETURN n AS mark, m AS property`)
+        .subscribe({
+            onNext: record => {
+                if(!isTypeExists)
+                    isTypeExists = true;
+                properties.push(record.get("property"));
+            },
+            onCompleted: () => {
+                if(!isTypeExists) 
+                    apiTools.sendReport(res, new ApiReport("error", 2, "Type not found!"))
+                else 
+                    apiTools.sendReport(res, new ApiReport("error", 0, "Successful!", {response: properties}));
+            }
+        });
+});
+
+module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], async (obj, req, res) => {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let nodeData = {};
+
+    try {
+        if(typeof(obj.mark) == typeof(""))
+            driver
+                .session()
+                .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type="${obj.mark}" RETURN properties(p) AS property`)
+                .subscribe({
+                    onNext: record => {
+                        let property = record.get("property");
+                        nodeData[property["propertyName"]] = property["default"];
+                    }
+                })
+        else
+            driver
+                .session()
+                .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type="MyType" RETURN properties(p) AS property`) //TODO
+
+        driver
+                .session()
+                .run(`CREATE (n:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData }).subscribe({
+                    onCompleted: () => { apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!",)) }
+                })
+
+        
+    }
+    catch (error) {
+        apiTools.sendReport(res, new ApiReport("error", -1, "Unexpected error!", error));
+        throw error;
+    }
+});
+
+module.exports.getNodes = apiTools.parameterizedHandler(["token"], async (obj, req, res) => {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let response = [];
+    driver
+        .session()
+        .run("MATCH (n:Display) RETURN n")
+        .subscribe({
+            onNext: record => {
+                response.push(record.get("n"));
+            },
+            onCompleted: () => {
+                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {reponse: response}));
+            }
+    })
 });
