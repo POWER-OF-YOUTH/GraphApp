@@ -32,7 +32,8 @@ export const EditorProvider = ({ children }) => {
     });
     const [nodeProperties, setNodeProperties] = useState({container: new Map()});
     const [activeMarks, setActiveMarks] = useState(new Set());
-    
+    const [selectedEntity, setSelectedEntity] = useState({nodes: [], edges: []});
+
     function addNodes(nodes) {
         const newGraph = {
             nodes: graphData.nodes.slice(),
@@ -63,6 +64,8 @@ export const EditorProvider = ({ children }) => {
             setGraphData,
             nodeProperties,
             setNodeProperties,
+            selectedEntity,
+            setSelectedEntity,
             addNodes
         }}
             >

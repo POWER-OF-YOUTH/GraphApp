@@ -13,22 +13,23 @@ import ConsturctorUzla from './ConstructorUzla';
 import ConstructorRelation from'./ConstructorRelation';
 import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
 import { useAccount } from '../contexts/AccountContext';
+import PropertiesOverview from './PropertiesOverview';
 
  const spisokNode = (
  <div>
-     <List component="nav" aria-label="main mailbox folders">
+     <List component="nav">
         <ConsturctorUzla node={{id: 991}} onClick={e => console.log("Are you clicking, son?")} />
     </List>
 </div>);
 const spisokRelation = (
     <div>
-        <List component="nav" aria-label="main mailbox folders">
+        <List component="nav">
             <ConstructorRelation node={{id: 991}} node1 = {{id: 123}}  relation = {{id: 111}} onClick={e => console.log("Are you clicking, son?")} />
         </List>
     </div>);
 function Editor() {
-    const { setTools, setRightDrawer, nodeProperties, setNodeProperties } = useNavigation();
-    const { connect } = useAppEditor();
+    const { setTools, setRightDrawer, } = useNavigation();
+    const { connect, selectedEntity, nodeProperties } = useAppEditor();
     const [addMarkOpen, setAddMarkOpen] = useState(false);
     const [activeMarkOpen, setActiveMarkOpen] = useState(false);
 
@@ -59,7 +60,7 @@ function Editor() {
                 <EditorRightMenuTab panels={[
                     {
                         title: 'Свойства',
-                        body: <div>Свойственная панель</div>
+                        body: <PropertiesOverview selectedEntity={selectedEntity} nodeProperties={nodeProperties} />
                     }
                 ]} />
             </div>

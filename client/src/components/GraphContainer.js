@@ -12,7 +12,7 @@ let counter = 10;
 function GraphContainer() {
     const { account } = useAccount(); // To bad
 
-    const { selectedTool, graphData, setGraphData, activeMarks } = useAppEditor();
+    const { selectedTool, graphData, setGraphData, activeMarks, setSelectedEntity } = useAppEditor();
     const options = {
         autoResize: true,
         height: '100%',
@@ -58,8 +58,8 @@ function GraphContainer() {
 
     const events = {
         select: function (event) {
-            var { nodes, edges } = event;
-            console.log(nodes);
+            const { nodes, edges } = event;
+            setSelectedEntity({nodes, edges});
         },
         click: function(event) {
             if (selectedTool == 'add-node')
