@@ -195,7 +195,7 @@ module.exports.getNodes = apiTools.parameterizedHandler(["token"], async (obj, r
                 response.push(record.get("n"));
             },
             onCompleted: () => {
-                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {reponse: response}));
+                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
             }
     })
 });
