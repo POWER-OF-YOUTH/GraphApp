@@ -9,20 +9,22 @@ import { useAppEditor } from '../contexts/EditorContext';
 
 function EditorPage() {
     const { account } = useAccount();
-    const { marks, setMarks } = useAppEditor();
+    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes } = useAppEditor();
 
-    useEffect(() => {
+    useEffect(async () => {
         if (!account)
             return;
-        fetch(`http://localhost/api/graph/getMarksInfo?token=${account.token}`)
-            .then(response => response.json())
-            .then(json => {
-                const arr = json.data.response;
-                const map = marks.container;
-                for (let i in arr)
-                    map.set(arr[i].type, arr[i].properties);
-                setMarks({container: map});
-            });
+        let marksInfo = await (await fetch(`http://localhost/api/graph/getMarksInfo?token=${account.token}`)).json();
+        const arr = marksInfo.data.response;
+        let map = marks.container;
+        for (let i in arr)
+            map.set(arr[i].type, arr[i].properties);
+        setMarks({container: map});
+
+        const nodes = await (await fetch(`http://localhost/api/graph/getNodes?token=${account.token}`)).json();
+        map = nodeProperties.container;
+        addNodes(nodes.data.reponse);
+        setNodeProperties({container: map});
     }, []);
 
     if (!account)

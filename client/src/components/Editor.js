@@ -12,6 +12,7 @@ import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
 import ConsturctorUzla from './ConstructorUzla';
 import ConstructorRelation from'./ConstructorRelation';
 import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
+import { useAccount } from '../contexts/AccountContext';
 
  const spisokNode = (
  <div>
@@ -26,7 +27,7 @@ const spisokRelation = (
         </List>
     </div>);
 function Editor() {
-    const { setTools, setRightDrawer } = useNavigation();
+    const { setTools, setRightDrawer, nodeProperties, setNodeProperties } = useNavigation();
     const { connect } = useAppEditor();
     const [addMarkOpen, setAddMarkOpen] = useState(false);
     const [activeMarkOpen, setActiveMarkOpen] = useState(false);
