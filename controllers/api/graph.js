@@ -167,13 +167,11 @@ module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], asy
                 .session()
                 .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type="MyType" RETURN properties(p) AS property`) //TODO
 
-        driver
+        let result = await driver
                 .session()
-                .run(`CREATE (n:Display:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData }).subscribe({
-                    onCompleted: () => { apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!",)) }
-                })
+                .run(`CREATE (n:Display:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData })
 
-        
+        apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {identity: result.records[0].get("identity")}));
     }
     catch (error) {
         apiTools.sendReport(res, new ApiReport("error", -1, "Unexpected error!", error));
