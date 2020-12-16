@@ -191,7 +191,7 @@ module.exports.getNode = apiTools.parameterizedHandler(["token", "id"], async (o
     try {
         let response = await driver.session().run(`MATCH (n:Display) WHERE ID(n)=${obj.id} RETURN n AS node`);
         if(response.records.length > 0)
-            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", response.records[0].get("node")));
+            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", { response: response.records[0].get("node") }));
         else 
             apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
     }
