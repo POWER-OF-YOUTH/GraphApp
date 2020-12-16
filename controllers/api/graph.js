@@ -179,6 +179,28 @@ module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], asy
     }
 });
 
+module.exports.getNode = apiTools.parameterizedHandler(["token", "id"], async (obj, req, res) =>{
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let data;
+
+    try {
+        let response = await driver.session().run(`MATCH (n:Display) WHERE ID(n)=${obj.id} RETURN n AS node`);
+        if(response.records.length > 0)
+            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", response.records[0].get("node")));
+        else 
+            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+    }
+    catch (error) {
+        apiTools.sendReport(res, new ApiReport("error", -1, "Unexpected error!", error));
+        throw error;
+    }
+});
+
 module.exports.getNodes = apiTools.parameterizedHandler(["token"], async (obj, req, res) => {
     if(!(await db.user.isTokenExists(obj.token)))
     {

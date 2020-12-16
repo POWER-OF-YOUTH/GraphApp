@@ -10,6 +10,7 @@ router.get("/deleteRelation", api.graph.deleteRelation);
 router.get("/getMarksInfo", api.graph.getMarksInfo);
 router.get("/getMarkInfo", api.graph.getMarkInfo);
 router.get("/createNode", api.graph.createNode);
+router.get("/getNode", api.graph.getNode);
 router.get("/getNodes", api.graph.getNodes);
 
 module.exports = router;
