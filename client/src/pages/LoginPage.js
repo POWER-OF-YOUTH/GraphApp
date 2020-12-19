@@ -3,6 +3,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import React, { useState } from 'react';
 import { useAccount } from '../contexts/AccountContext';
 import history from '../history';
+import config from '../config.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,7 +36,7 @@ function LoginPage() {
 
     async function submit(event) {
         event.preventDefault();
-        fetch(`http://localhost/api/user/login?login=${login}&password=${password}`)
+        fetch(`http://${config.host}/api/user/login?login=${login}&password=${password}`)
             .then(response => response.json())
             .then(json => setResponse(json));
     }

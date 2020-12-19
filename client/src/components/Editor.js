@@ -12,26 +12,29 @@ import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
 import ConsturctorUzla from './ConstructorUzla';
 import ConstructorRelation from'./ConstructorRelation';
 import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
+import { useAccount } from '../contexts/AccountContext';
+import PropertiesOverview from './PropertiesOverview';
+import config from '../config.json';
 
  const spisokNode = (
  <div>
-     <List component="nav" aria-label="main mailbox folders">
+     <List component="nav">
         <ConsturctorUzla node={{id: 991}} onClick={e => console.log("Are you clicking, son?")} />
     </List>
 </div>);
 const spisokRelation = (
     <div>
-        <List component="nav" aria-label="main mailbox folders">
+        <List component="nav">
             <ConstructorRelation node={{id: 991}} node1 = {{id: 123}}  relation = {{id: 111}} onClick={e => console.log("Are you clicking, son?")} />
         </List>
     </div>);
 function Editor() {
-    const { setTools, setRightDrawer } = useNavigation();
-    const { connect } = useAppEditor();
+    const { setTools, setRightDrawer, } = useNavigation();
+    const { connect, selectedEntity, nodeProperties } = useAppEditor();
     const [addMarkOpen, setAddMarkOpen] = useState(false);
     const [activeMarkOpen, setActiveMarkOpen] = useState(false);
 
-    connect('http://localhost:7532/');
+    connect(`http://${config.host}:7532/`);
 
     useEffect(() => {
         setTools([
@@ -58,7 +61,7 @@ function Editor() {
                 <EditorRightMenuTab panels={[
                     {
                         title: 'Свойства',
-                        body: <div>Свойственная панель</div>
+                        body: <PropertiesOverview selectedEntity={selectedEntity} nodeProperties={nodeProperties} />
                     }
                 ]} />
             </div>

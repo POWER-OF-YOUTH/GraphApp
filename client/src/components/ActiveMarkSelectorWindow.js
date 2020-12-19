@@ -22,18 +22,28 @@ const useStyles = makeStyles((theme) => ({
 
 let counter = 2;
 
-function ActiveMarkSelectorWindow({opened, setOpen})
-{
+function ActiveMarkSelectorWindow({opened, setOpen}) {
     const classes = useStyles();
     const { account } = useAccount();
-    const { marks } = useAppEditor();
+    const { marks, activeMarks } = useAppEditor();
 
     const handleClose = () => {
         setOpen(false);
     };
 
     function select(key, value) {
-        console.log(`${key} is ${value}`);
+        if (value)
+            activeMarks.add(key);
+        else
+            activeMarks.delete(key);
+    }
+
+    if (opened) {
+        activeMarks.clear();
+    }
+
+    function ok(event) {
+        handleClose();
     }
 
     return (
@@ -62,7 +72,8 @@ function ActiveMarkSelectorWindow({opened, setOpen})
                                     }
                                     label={k}
                                 />
-                            })}   
+                            })}
+                            <Button onClick={ok}>Ок</Button>
                         </form>
                     </div>
                 </DialogContent>

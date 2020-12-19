@@ -30,8 +30,6 @@ function ToolButton({ onClick, typeoficon, hint }) {
             </IconButton>
         </Tooltip>
     );
-
-
 }
 
 export default ToolButton;

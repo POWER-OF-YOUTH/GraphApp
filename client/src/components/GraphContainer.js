@@ -5,28 +5,15 @@ import cloneDeep from "lodash/cloneDeep";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from 'react';
 import { useAppEditor } from "../contexts/EditorContext";
-
-const graph = {
-    nodes: [
-        { id: 1, label: "Node 1", title: "node 1 tootip text", group: 1 },
-        { id: 2, label: "Node 2", title: "node 2 tootip text", group: 1 },
-        { id: 3, label: "Node 3", title: "node 3 tootip text", group: 2, shape: 'hexagon' },
-        { id: 4, label: "Node 4", title: "node 4 tootip text", color: '#FF0000', group: 2 },
-        { id: 5, label: "Node 5", title: "node 5 tootip text", shape: 'triangle' }
-    ],
-    edges: [
-        { from: 1, to: 2 },
-        { from: 1, to: 3 },
-        { from: 2, to: 4, dashes: true, hoverWidth: 4 },
-        { from: 2, to: 5, label: 'asdasdasds' }
-    ]
-};
+import { useAccount } from "../contexts/AccountContext";
+import config from '../config.json';
 
 let counter = 10;
 
 function GraphContainer() {
-    const { selectedTool } = useAppEditor();
-    const [graphData, setGraphData] = useState(graph);
+    const { account } = useAccount(); // To bad
+
+    const { selectedTool, graphData, setGraphData, activeMarks, setSelectedEntity, addNodes } = useAppEditor();
     const options = {
         autoResize: true,
         height: '100%',
@@ -72,25 +59,18 @@ function GraphContainer() {
 
     const events = {
         select: function (event) {
-            var { nodes, edges } = event;
-            console.log(nodes);
+            const { nodes, edges } = event;
+            setSelectedEntity({nodes, edges});
         },
         click: function(event) {
             if (selectedTool == 'add-node')
             {
-                const newGraph = {
-                    nodes: graphData.nodes.slice(),
-                    edges: graphData.edges
-                }
-                newGraph.nodes.push({
-                    id: ++counter,
-                    label:
-                    "Node",
-                    title: "node 5 tootip text",
-                    shape: 'circle',
-                    x: event.pointer.canvas.x,
-                    y: event.pointer.canvas.y });
-                setGraphData(newGraph);
+                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
+                    .then(response => response.json())
+                    .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
+                    .then(response => response.json())
+                    .then(json => addNodes([json.data.response]));
+                // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }
         }
     };
