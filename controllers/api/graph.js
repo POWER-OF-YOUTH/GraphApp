@@ -142,6 +142,12 @@ module.exports.getMarkInfo = apiTools.parameterizedHandler(["token", "type"], as
         });
 });
 
+/*
+{
+    "token" : "asdasd",
+    "mark" : "type1+type2+type3"
+}
+*/
 module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], async (obj, req, res) => {
     if(!(await db.user.isTokenExists(obj.token)))
     {
@@ -151,25 +157,21 @@ module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], asy
 
     let nodeData = {};
 
+    let marks = obj.mark.split(" ");
     try {
-        if(typeof(obj.mark) == typeof(""))
-            driver
+        let properties = await driver
                 .session()
-                .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type="${obj.mark}" RETURN properties(p) AS property`)
-                .subscribe({
-                    onNext: record => {
-                        let property = record.get("property");
-                        nodeData[property["propertyName"]] = property["default"];
-                    }
-                })
-        else
-            driver
-                .session()
-                .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type="MyType" RETURN properties(p) AS property`) //TODO
+                .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type IN ${JSON.stringify(marks)} RETURN properties(p) AS property`);
+
+        for (let i = 0; i < properties.records.length; i++)
+        {
+            let property = properties.records[i].get("property");
+            nodeData[property["propertyName"]] = property["default"];
+        }
 
         let result = await driver
                 .session()
-                .run(`CREATE (n:Display:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData })
+                .run(`CREATE (n:Display:${marks.join(":")}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData })
 
         apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {identity: result.records[0].get("identity")}));
     }
