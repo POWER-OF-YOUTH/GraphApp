@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from 'react';
 import { useAppEditor } from "../contexts/EditorContext";
 import { useAccount } from "../contexts/AccountContext";
+import config from '../config.json';
 
 let counter = 10;
 
@@ -64,9 +65,9 @@ function GraphContainer() {
         click: function(event) {
             if (selectedTool == 'add-node')
             {
-                fetch(`http://localhost/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
+                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
                     .then(response => response.json())
-                    .then(async json => await fetch(`http://localhost/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
+                    .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
                     .then(response => response.json())
                     .then(json => addNodes([json.data.response]));
                 // api/graph/createNode?token=someToken&mark=type1&mark=type2

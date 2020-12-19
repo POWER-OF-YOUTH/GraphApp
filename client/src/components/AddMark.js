@@ -8,6 +8,7 @@ import { TextField, makeStyles } from '@material-ui/core';
 import PropertyEditor from './PropertyEditor';
 import { useAccount } from '../contexts/AccountContext';
 import MuiAlert from '@material-ui/lab/Alert';
+import config from '../config.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,7 +55,7 @@ function AddMark({ opened, setOpen }) {
             type: name,
             properties: properties
         };
-        fetch(`http://localhost/api/graph/createMark?token=${account.token}&data=${JSON.stringify(jsonchik)}`)
+        fetch(`http://${config.host}/api/graph/createMark?token=${account.token}&data=${JSON.stringify(jsonchik)}`)
             .then(response => response.json())
             .then(json => setResponse(json));
     }

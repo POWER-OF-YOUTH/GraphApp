@@ -1,6 +1,7 @@
 import { Paper, Container, TextField, makeStyles, Typography, Button } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import React, { useState } from 'react';
+import config from '../config.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,7 +43,7 @@ function RegisterPage() {
         event.preventDefault();
         if (errorObj.email || errorObj.login || errorObj.password)
             return;
-        fetch(`http://localhost/api/user/register?login=${login}&mail=${email}&name=${name}&surname=${surname}&password=${password}`)
+        fetch(`http://${config.host}/api/user/register?login=${login}&mail=${email}&name=${name}&surname=${surname}&password=${password}`)
             .then(response => response.json())
             .then(json => setResponse(json))
             .catch(err => console.log(err));

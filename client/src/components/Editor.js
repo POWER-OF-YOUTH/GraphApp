@@ -14,6 +14,7 @@ import ConstructorRelation from'./ConstructorRelation';
 import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
 import { useAccount } from '../contexts/AccountContext';
 import PropertiesOverview from './PropertiesOverview';
+import config from '../config.json';
 
  const spisokNode = (
  <div>
@@ -33,7 +34,7 @@ function Editor() {
     const [addMarkOpen, setAddMarkOpen] = useState(false);
     const [activeMarkOpen, setActiveMarkOpen] = useState(false);
 
-    connect('http://localhost:7532/');
+    connect(`http://${config.host}:7532/`);
 
     useEffect(() => {
         setTools([
