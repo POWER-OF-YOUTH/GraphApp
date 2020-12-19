@@ -23,7 +23,7 @@ function EditorPage() {
 
         const nodes = await (await fetch(`http://localhost/api/graph/getNodes?token=${account.token}`)).json();
         map = nodeProperties.container;
-        addNodes(nodes.data.reponse);
+        addNodes(nodes.data.response);
         setNodeProperties({container: map});
     }, []);
 

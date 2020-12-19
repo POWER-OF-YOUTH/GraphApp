@@ -12,7 +12,7 @@ let counter = 10;
 function GraphContainer() {
     const { account } = useAccount(); // To bad
 
-    const { selectedTool, graphData, setGraphData, activeMarks, setSelectedEntity } = useAppEditor();
+    const { selectedTool, graphData, setGraphData, activeMarks, setSelectedEntity, addNodes } = useAppEditor();
     const options = {
         autoResize: true,
         height: '100%',
@@ -66,19 +66,9 @@ function GraphContainer() {
             {
                 fetch(`http://localhost/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
                     .then(response => response.json())
-                    .then(json => {
-                        const newGraph = {
-                            nodes: graphData.nodes.slice(),
-                            edges: graphData.edges
-                        }
-                        newGraph.nodes.push({
-                            id: json.data.response.identity,
-                            label: activeMarks.values().next().value,
-                            shape: 'circle',
-                            x: event.pointer.canvas.x,
-                            y: event.pointer.canvas.y });
-                        setGraphData(newGraph);
-                    });
+                    .then(async json => await fetch(`http://localhost/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
+                    .then(response => response.json())
+                    .then(json => addNodes([json.data.response]));
                 // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }
         }
