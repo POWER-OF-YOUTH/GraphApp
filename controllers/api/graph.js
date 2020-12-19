@@ -167,13 +167,33 @@ module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], asy
                 .session()
                 .run(`MATCH (m:Mark)-[:property]->(p:Property) WHERE m.type="MyType" RETURN properties(p) AS property`) //TODO
 
-        driver
+        let result = await driver
                 .session()
-                .run(`CREATE (n:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData }).subscribe({
-                    onCompleted: () => { apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!",)) }
-                })
+                .run(`CREATE (n:Display:${obj.mark}) SET n = {data} RETURN ID(n) as identity`, { data: nodeData })
 
-        
+        apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {identity: result.records[0].get("identity")}));
+    }
+    catch (error) {
+        apiTools.sendReport(res, new ApiReport("error", -1, "Unexpected error!", error));
+        throw error;
+    }
+});
+
+module.exports.getNode = apiTools.parameterizedHandler(["token", "id"], async (obj, req, res) =>{
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let data;
+
+    try {
+        let response = await driver.session().run(`MATCH (n:Display) WHERE ID(n)=${obj.id} RETURN n AS node`);
+        if(response.records.length > 0)
+            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", { response: response.records[0].get("node") }));
+        else 
+            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
     }
     catch (error) {
         apiTools.sendReport(res, new ApiReport("error", -1, "Unexpected error!", error));
@@ -197,7 +217,7 @@ module.exports.getNodes = apiTools.parameterizedHandler(["token"], async (obj, r
                 response.push(record.get("n"));
             },
             onCompleted: () => {
-                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {reponse: response}));
+                apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
             }
     })
 });
