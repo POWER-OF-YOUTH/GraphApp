@@ -71,7 +71,10 @@ module.exports.deleteNode = apiTools.parameterizedHandler(["token", "id"], async
         return;
     }
 
-    db.graph.deleteNode(obj.id);
+    driver
+        .session()
+        .run(`MATCH (n:Display) WHERE id(n)=${obj.id} DETACH DELETE n`);
+
     apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
 });
 
@@ -142,12 +145,6 @@ module.exports.getMarkInfo = apiTools.parameterizedHandler(["token", "type"], as
         });
 });
 
-/*
-{
-    "token" : "asdasd",
-    "mark" : "type1+type2+type3"
-}
-*/
 module.exports.createNode = apiTools.parameterizedHandler(["token", "mark"], async (obj, req, res) => {
     if(!(await db.user.isTokenExists(obj.token)))
     {
@@ -188,8 +185,6 @@ module.exports.getNode = apiTools.parameterizedHandler(["token", "id"], async (o
         return;
     }
 
-    let data;
-
     try {
         let response = await driver.session().run(`MATCH (n:Display) WHERE ID(n)=${obj.id} RETURN n AS node`);
         if(response.records.length > 0)
@@ -222,4 +217,20 @@ module.exports.getNodes = apiTools.parameterizedHandler(["token"], async (obj, r
                 apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
             }
     })
+});
+
+module.exports.getRelations = apiTools.parameterizedHandler(["token"], async (obj, req, res) => {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let response = [];
+
+    let result = driver.session().run(`MATCH (:Display)-[rel]-(:Display) RETURN rel AS relation`).subscribe(
+        {
+            onNext: (record) => response.push(record.get("relation")),
+            onCompleted: () => apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", response))
+        });
 });
