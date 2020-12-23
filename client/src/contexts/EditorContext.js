@@ -53,6 +53,18 @@ export const EditorProvider = ({ children }) => {
         setGraphData(newGraph);
     }
 
+    function addRelations(relationsArray) {
+        const newGraph = {
+            nodes: graphData.nodes,
+            edges: graphData.edges.slice()
+        }
+        for (let i in relationsArray) {
+            const relation = relationsArray[i];
+            newGraph.edges.push(relation);
+        }
+        setGraphData(newGraph);
+    }
+
     return (
         <EditorContext.Provider value={{
             connect,
@@ -66,7 +78,8 @@ export const EditorProvider = ({ children }) => {
             setNodeProperties,
             selectedEntity,
             setSelectedEntity,
-            addNodes
+            addNodes,
+            addRelations
         }}
             >
                 { children }

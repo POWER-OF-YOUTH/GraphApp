@@ -13,7 +13,16 @@ let counter = 10;
 function GraphContainer() {
     const { account } = useAccount(); // To bad
 
-    const { selectedTool, graphData, setGraphData, activeMarks, setSelectedEntity, addNodes } = useAppEditor();
+    const {
+        selectedTool,
+        graphData,
+        setGraphData,
+        activeMarks,
+        selectedEntity,
+        setSelectedEntity,
+        addNodes,
+        addRelations
+    } = useAppEditor();
     const options = {
         autoResize: true,
         height: '100%',
@@ -60,11 +69,18 @@ function GraphContainer() {
     const events = {
         select: function (event) {
             const { nodes, edges } = event;
+            if (selectedTool == 'add-relation' && selectedEntity.nodes.length == 1 && nodes.length == 1 && selectedEntity.nodes[0] != nodes[0]) {
+                const parent = selectedEntity.nodes[0];
+                const child = nodes[0];
+                fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=default`)
+                    .then(response => response.json())
+                    .then(json => addRelations([{from: parent, to: child, label: 'default'}]))
+                    .catch(err => console.log(err));
+            }
             setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            if (selectedTool == 'add-node')
-            {
+            if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
                     .then(response => response.json())
                     .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
