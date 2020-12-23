@@ -60,8 +60,11 @@ module.exports.createRelation = apiTools.parameterizedHandler(["token", "from", 
         return;
     }
 
-    db.graph.createRelation(obj.from, obj.to, obj.name);
-    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+    let result = await driver
+        .session()
+        .run(`match (f),(t) where ID(f)=${obj.from} and ID(t)=${obj.to} merge (f)-[rel:${obj.name}]->(t) return rel as relation`);
+
+    apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", result.records[0].get("relation")));
 });
 
 module.exports.deleteNode = apiTools.parameterizedHandler(["token", "id"], async function body(obj, req, res) {
