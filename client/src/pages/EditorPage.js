@@ -7,7 +7,7 @@ import config from '../config.json';
 
 function EditorPage() {
     const { account } = useAccount();
-    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes } = useAppEditor();
+    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes, addRelations } = useAppEditor();
 
     useEffect(() => {
         async function inner() {
@@ -24,6 +24,9 @@ function EditorPage() {
             map = nodeProperties.container;
             addNodes(nodes.data.response);
             setNodeProperties({container: map});
+
+            const relationsResult = await (await fetch(`http://${config.host}/api/graph/getRelations?token=${account.token}`)).json();
+            addRelations(relationsResult.data);
         }
         inner();
     }, []);

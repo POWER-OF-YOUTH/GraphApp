@@ -1,11 +1,21 @@
 import React from 'react';
 import { ListItem, ListItemText } from '@material-ui/core';
-function ConstructorRelation({ node,node1,relation, onClick }) {
+import { useAppEditor } from '../contexts/EditorContext';
+
+function ConstructorRelation({ onClick }) {
+    const { relations } = useAppEditor();
+    let items = [];
+    relations.container.forEach((value, key, theMap) => {
+        items.push(
+            <ListItem button onClick={onClick}>
+                <ListItemText primary={`id:${key}, ${value.start} → ${value.end} `} />
+            </ListItem>
+        )
+    });
+    
     return (
         <div>
-            <ListItem button onClick={onClick}>
-                <ListItemText primary={`id:${relation.id}, ${node.id} <==> ${node1.id} `} />
-            </ListItem>
+            {items}
         </div>
     );
 }

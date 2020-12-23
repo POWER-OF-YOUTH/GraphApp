@@ -2,18 +2,21 @@ import React from 'react';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { useAppEditor } from '../contexts/EditorContext';
 
-function ConsturctorUzla({ node, onClick }) {
-    const { graphData } = useAppEditor();
+function ConsturctorUzla({ onClick }) {
+    const { nodeProperties } = useAppEditor();
+    let items = [];
+    nodeProperties.container.forEach((value, key, theMap) => {
+        items.push(
+            <ListItem button onClick={onClick}>
+                <ListItemText primary={key} />
+            </ListItem>
+        )
+    });
+    
     return (
-    <div>
-        {graphData.nodes.map(node => {
-            return (<ListItem button onClick={onClick}>
-            <ListItemText primary={node.id} />
-         </ListItem>)
-        })
-        }
-        
-    </div>
+        <div>
+            {items}
+        </div>
     );
 }
 

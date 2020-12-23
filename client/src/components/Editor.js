@@ -19,13 +19,13 @@ import config from '../config.json';
  const spisokNode = (
  <div>
      <List component="nav">
-        <ConsturctorUzla node={{id: 991}} onClick={e => console.log("Are you clicking, son?")} />
+        <ConsturctorUzla onClick={(event, id) => console.log("Are you clicking, son?")} />
     </List>
 </div>);
 const spisokRelation = (
     <div>
         <List component="nav">
-            <ConstructorRelation node={{id: 991}} node1 = {{id: 123}}  relation = {{id: 111}} onClick={e => console.log("Are you clicking, son?")} />
+            <ConstructorRelation onClick={(event, id) => console.log("Are you clicking, son?")} />
         </List>
     </div>);
 function Editor() {

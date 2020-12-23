@@ -34,11 +34,11 @@ function GraphContainer() {
         },
         edges: {
             color: "#000000",
-            hoverWidth: 10,
-            physics: false
+            hoverWidth: 2,
+            physics: true
         },
         nodes: {
-            physics: false
+            physics: true
         },
         interaction: {
             hover: true,
@@ -74,7 +74,7 @@ function GraphContainer() {
                 const child = nodes[0];
                 fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=default`)
                     .then(response => response.json())
-                    .then(json => addRelations([{from: parent, to: child, label: 'default'}]))
+                    .then(json => addRelations([{start: parent, end: child, type: 'default'}])) // TODO: set identity
                     .catch(err => console.log(err));
             }
             setSelectedEntity({nodes, edges});

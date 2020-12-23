@@ -31,13 +31,13 @@ export const EditorProvider = ({ children }) => {
         ]
     });
     const [nodeProperties, setNodeProperties] = useState({container: new Map()});
+    const [relations, setRelations] = useState({container: new Map()});
     const [activeMarks, setActiveMarks] = useState(new Set());
     const [selectedEntity, setSelectedEntity] = useState({nodes: [], edges: []});
 
     function addNodes(nodes) {
         const newGraph = {
-            nodes: graphData.nodes.slice(),
-            edges: graphData.edges
+            nodes: []
         }
         const map = nodeProperties.container;
         for (let i in nodes) {
@@ -50,19 +50,21 @@ export const EditorProvider = ({ children }) => {
         }
         
         setNodeProperties({container: map});
-        setGraphData(newGraph);
+        setGraphData(data => { return {nodes: data.nodes.concat(newGraph.nodes), edges: data.edges}});
     }
 
     function addRelations(relationsArray) {
         const newGraph = {
-            nodes: graphData.nodes,
-            edges: graphData.edges.slice()
+            edges: []
         }
+        const map = relations.container;
         for (let i in relationsArray) {
             const relation = relationsArray[i];
-            newGraph.edges.push(relation);
+            map.set(relation.identity, relation);
+            newGraph.edges.push({from: relation.start, to: relation.end, label: relation.type});
         }
-        setGraphData(newGraph);
+        setRelations({container: map});
+        setGraphData(data => { return {nodes: data.nodes, edges: data.edges.concat(newGraph.edges)}});
     }
 
     return (
@@ -78,6 +80,8 @@ export const EditorProvider = ({ children }) => {
             setNodeProperties,
             selectedEntity,
             setSelectedEntity,
+            relations,
+            setRelations,
             addNodes,
             addRelations
         }}
