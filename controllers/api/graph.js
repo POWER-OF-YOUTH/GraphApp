@@ -37,7 +37,7 @@ module.exports.createMark = apiTools.parameterizedHandler(["token", "data"], asy
     }
 
     let result = await db.graph.createNode(["Mark"], {type: data.type});
-    let markID = result.records[0]._fields[0].low;
+    let markID = result.records[0].get("identity");
     for(let i = 0; i < data.properties.length; i++) {
         let obj;
         try {
@@ -47,7 +47,7 @@ module.exports.createMark = apiTools.parameterizedHandler(["token", "data"], asy
             apiTools.sendReport(res, new ApiReport("error", 999, requireParam));
             return;
         }
-        let propertyID = (await db.graph.createNode(["Property"], obj)).records[0]._fields[0].low;
+        let propertyID = (await db.graph.createNode(["Property"], obj)).records[0].get("identity");
         await db.graph.createRelation(markID, propertyID, "property")
     }
     apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
@@ -236,4 +236,21 @@ module.exports.getRelations = apiTools.parameterizedHandler(["token"], async (ob
             onNext: (record) => response.push(record.get("relation")),
             onCompleted: () => apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", response))
         });
+});
+
+module.exports.editNode = apiTools.parameterizedHandler(["token", "id", "name", "value"], async (obj, req, res) => {
+    if(!(await db.user.isTokenExists(obj.token)))
+    {
+        apiTools.sendReport(res, new ApiReport("error", 1, "Wrong token!"));
+        return;
+    }
+
+    let result = await driver
+        .session()
+        .run(`MATCH (n:Display) WHERE id(n)=${obj.id} AND exists(n.${obj.name}) SET n.${obj.name}="${obj.value}" RETURN n AS node`);
+
+    if(result.records.length != 0)
+        apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
+    else
+        apiTools.sendReport(res, new ApiReport("error", -1, "Unexpected error!"));
 });
