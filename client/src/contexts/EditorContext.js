@@ -47,7 +47,8 @@ export const EditorProvider = ({ children }) => {
             newGraph.nodes.push({
                 id: node.identity,
                 label: `${node.identity}`,
-                shape: 'circle'});
+                shape: 'circle',
+                x: node.x == undefined ? 0 : node.x, y: node.y == undefined ? 0 : node.y});
         }
         
         setNodeProperties({container: map});
