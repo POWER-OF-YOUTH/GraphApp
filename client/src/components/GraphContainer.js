@@ -21,7 +21,9 @@ function GraphContainer() {
         selectedEntity,
         setSelectedEntity,
         addNodes,
-        addRelations
+        addRelations,
+        network,
+        setNetwork
     } = useAppEditor();
     const options = {
         autoResize: true,
@@ -82,20 +84,24 @@ function GraphContainer() {
                 setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            if (selectedTool == 'add-node') {
-                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
+            if (selectedTool == 'add-node') { //TODO: Можно ускорить!
+                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
                     .then(response => response.json())
                     .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
                     .then(response => response.json())
-                    .then(json => addNodes([json.data.response]));
-                // api/graph/createNode?token=someToken&mark=type1+type2
+                    .then(json => {
+                        json.data.response.x = event.pointer.canvas.x; //event.pointer.canvas - содержит координаты указателя.
+                        json.data.response.y = event.pointer.canvas.y;
+                        addNodes([json.data.response])
+                    });
+                // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }
         }
     };
 
     return (
         <div style={{ width: '100%', height: 'calc(100vh - 64px)' }}>
-            <Graph key={uuidv4} graph={graphData} options={options} events={events} />
+            <Graph key={uuidv4} graph={graphData} options={options} events={events} getNetwork={network => setNetwork(network)}/>
         </div>
     );
 }
