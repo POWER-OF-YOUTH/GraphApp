@@ -78,7 +78,9 @@ function GraphContainer() {
                     .then(response => response.json())
                     .then(json => addRelations([{start: parent, end: child, type: 'default'}])) // TODO: set identity
                     .catch(err => console.log(err));
+
                 setSelectedEntity({nodes: [], edges: []}) //Сбрасываем выделение
+                network.unselectAll();
             }
             else
                 setSelectedEntity({nodes, edges});
