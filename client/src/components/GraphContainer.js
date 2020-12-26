@@ -79,14 +79,12 @@ function GraphContainer() {
                     .then(json => addRelations([{start: parent, end: child, type: 'default'}])) // TODO: set identity
                     .catch(err => console.log(err));
                 setSelectedEntity({nodes: [], edges: []}) //Сбрасываем выделение
+                network.unselectAll();
             }
             else
                 setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            console.log(network);
-            network.redraw();
-            network.deleteSelected();
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
