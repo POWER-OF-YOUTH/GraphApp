@@ -82,13 +82,13 @@ function GraphContainer() {
             setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            if (selectedTool == 'add-node') {
+            if (selectedTool == 'add-node') { //TODO: Можно ускорить!
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
                     .then(response => response.json())
                     .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
                     .then(response => response.json())
                     .then(json => {
-                        json.data.response.x = event.pointer.canvas.x;
+                        json.data.response.x = event.pointer.canvas.x; //event.pointer.canvas - содержит координаты указателя.
                         json.data.response.y = event.pointer.canvas.y;
                         addNodes([json.data.response])
                     });
