@@ -70,7 +70,6 @@ function GraphContainer() {
 
     const events = {
         select: function (event) {
-            network.addNodeMode();
             const { nodes, edges } = event;
             if (selectedTool == 'add-relation' && selectedEntity.nodes.length == 1 && nodes.length == 1 && selectedEntity.nodes[0] != nodes[0]) {
                 const parent = selectedEntity.nodes[0];
@@ -87,6 +86,8 @@ function GraphContainer() {
         },
         click: function(event) {
             network.addNodeMode();
+            graphData.nodes.push({id: 9999, label: 12351, x: 1, y: 1});
+            network.selectNodes(graphData);
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
