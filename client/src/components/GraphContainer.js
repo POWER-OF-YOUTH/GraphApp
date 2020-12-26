@@ -49,10 +49,9 @@ function GraphContainer() {
         },
         manipulation: {
             enabled: true,
-            /*
             addNode: function(nodeData, callback) {
-                console.log('add n');
-            },*/
+                console.log(this);
+            },
             addEdge: function(edgeData, callback) {
                 console.log('add e');
             },
@@ -86,6 +85,7 @@ function GraphContainer() {
         },
         click: function(event) {
             console.log(network);
+            network.manipulation.options.addNode({a:1, b:2}, () => {});
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
