@@ -13,5 +13,6 @@ router.get("/createNode", api.graph.createNode);
 router.get("/getNode", api.graph.getNode);
 router.get("/getNodes", api.graph.getNodes);
 router.get("/getRelations", api.graph.getRelations);
+router.get("/editNode", api.graph.editNode);
 
 module.exports = router;

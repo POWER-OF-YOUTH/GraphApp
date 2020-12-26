@@ -8,7 +8,7 @@ const driver = require('../driver');
 function createNode(labels, data) {
     return driver
         .session()
-        .run(`CREATE (n:${labels.join(":")}) SET n = {data} RETURN ID(n)`, { data: data });
+        .run(`CREATE (n:${labels.join(":")}) SET n = {data} RETURN ID(n) as identity`, { data: data });
 }
 
 /**

@@ -78,8 +78,10 @@ function GraphContainer() {
                     .then(response => response.json())
                     .then(json => addRelations([{start: parent, end: child, type: 'default'}])) // TODO: set identity
                     .catch(err => console.log(err));
+                setSelectedEntity({nodes: [], edges: []}) //Сбрасываем выделение
             }
-            setSelectedEntity({nodes, edges});
+            else
+                setSelectedEntity({nodes, edges});
         },
         click: function(event) {
             if (selectedTool == 'add-node') { //TODO: Можно ускорить!

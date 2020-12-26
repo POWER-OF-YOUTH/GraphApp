@@ -38,7 +38,7 @@ function Editor() {
 
     useEffect(() => {
         setTools([
-            <ToolButton typeoficon={'cursor'} hint="Интсрумент выделения" />,
+            <ToolButton typeoficon={'cursor'} hint="Инструмент выделения" />,
             <ToolButton onClick={() => setActiveMarkOpen(true)} typeoficon={'add-node'} hint="Инструмент узлов" />,
             <ToolButton typeoficon={'add-relation'} hint="Инструмент связей" />,
             <ToolButton typeoficon={'filter'} hint="Фильтры" />,
