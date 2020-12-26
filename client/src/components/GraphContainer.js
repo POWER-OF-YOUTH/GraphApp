@@ -86,6 +86,7 @@ function GraphContainer() {
         click: function(event) {
             console.log(network);
             network.redraw();
+            network.deleteSelected();
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
