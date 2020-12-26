@@ -89,6 +89,7 @@ function GraphContainer() {
             //network.addNodeMode();
             //graphData.nodes.push({id: 9999, label: 12351, x: 1, y: 1});
             network.selectNodes(nodeProperties);
+            graphData.update();
             //network.editNode();
             console.log(graphData);
             if (selectedTool == 'add-node') {
