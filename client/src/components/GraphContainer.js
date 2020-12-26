@@ -89,6 +89,7 @@ function GraphContainer() {
             graphData.nodes.push({id: 9999, label: 12351, x: 1, y: 1});
             network.selectNodes(graphData);
             network.editNode();
+            console.log(graphData);
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
