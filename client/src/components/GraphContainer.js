@@ -95,6 +95,7 @@ function GraphContainer() {
                     .then(json => {
                         json.data.response.x = event.pointer.canvas.x;
                         json.data.response.y = event.pointer.canvas.y;
+                        console.log(json.data.response);
                         return addNodes([json.data.response]);
                     });
                 // api/graph/createNode?token=someToken&mark=type1+type2
