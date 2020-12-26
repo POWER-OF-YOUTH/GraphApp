@@ -92,7 +92,11 @@ function GraphContainer() {
                     .then(response => response.json())
                     .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
                     .then(response => response.json())
-                    .then(json => addNodes([json.data.response]));
+                    .then(json => {
+                        json.data.response.x = event.pointer.canvas.x;
+                        json.data.response.y = event.pointer.canvas.y;
+                        return addNodes([json.data.response]);
+                    });
                 // api/graph/createNode?token=someToken&mark=type1+type2
             }
         }
