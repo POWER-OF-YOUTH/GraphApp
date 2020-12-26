@@ -85,7 +85,6 @@ function GraphContainer() {
         },
         click: function(event) {
             console.log(network);
-            network.manipulation.options.addNode({a:1, b:2}, () => {});
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
@@ -98,7 +97,7 @@ function GraphContainer() {
     };
 
     return (
-        <div style={{ width: '100%', height: 'calc(100vh - 64px)' }}>
+        <div class="main_graph" style={{ width: '100%', height: 'calc(100vh - 64px)' }}>
             <Graph key={uuidv4} graph={graphData} options={options} events={events} getNetwork={network => setNetwork(network)} />
         </div>
     );
