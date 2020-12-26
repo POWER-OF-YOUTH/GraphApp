@@ -49,9 +49,10 @@ function GraphContainer() {
         },
         manipulation: {
             enabled: true,
+            /*
             addNode: function(nodeData, callback) {
                 console.log('add n');
-            },
+            },*/
             addEdge: function(edgeData, callback) {
                 console.log('add e');
             },
