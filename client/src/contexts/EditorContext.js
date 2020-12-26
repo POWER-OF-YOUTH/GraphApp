@@ -13,6 +13,7 @@ export const EditorProvider = ({ children }) => {
 
     }
 
+    const [network, setNetwork] = useState(undefined);
     const [selectedTool, setSelectedTool] = useState('cursor');
     const [marks, setMarks] = useState({container: new Map()});
     const [graphData, setGraphData] = useState({
@@ -83,7 +84,9 @@ export const EditorProvider = ({ children }) => {
             relations,
             setRelations,
             addNodes,
-            addRelations
+            addRelations,
+            network,
+            setNetwork
         }}
             >
                 { children }

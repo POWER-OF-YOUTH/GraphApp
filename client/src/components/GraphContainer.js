@@ -21,7 +21,9 @@ function GraphContainer() {
         selectedEntity,
         setSelectedEntity,
         addNodes,
-        addRelations
+        addRelations,
+        network,
+        setNetwork
     } = useAppEditor();
     const options = {
         autoResize: true,
@@ -95,7 +97,7 @@ function GraphContainer() {
 
     return (
         <div style={{ width: '100%', height: 'calc(100vh - 64px)' }}>
-            <Graph key={uuidv4} graph={graphData} options={options} events={events} />
+            <Graph key={uuidv4} graph={graphData} options={options} events={events} getNetwork={network => setNetwork(network)} />
         </div>
     );
 }
