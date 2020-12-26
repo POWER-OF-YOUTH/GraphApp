@@ -34,6 +34,7 @@ export const EditorProvider = ({ children }) => {
     const [relations, setRelations] = useState({container: new Map()});
     const [activeMarks, setActiveMarks] = useState(new Set());
     const [selectedEntity, setSelectedEntity] = useState({nodes: [], edges: []});
+    const [network, setNetwork] = useState(undefined);
 
     function addNodes(nodes) {
         const newGraph = {
@@ -46,7 +47,9 @@ export const EditorProvider = ({ children }) => {
             newGraph.nodes.push({
                 id: node.identity,
                 label: `${node.identity}`,
-                shape: 'circle'});
+                shape: 'circle',
+                x: node.x != undefined ? node.x : 0,
+                y: node.y != undefined ? node.y : 0});
         }
         
         setNodeProperties({container: map});
@@ -83,7 +86,9 @@ export const EditorProvider = ({ children }) => {
             relations,
             setRelations,
             addNodes,
-            addRelations
+            addRelations,
+            network,
+            setNetwork
         }}
             >
                 { children }
