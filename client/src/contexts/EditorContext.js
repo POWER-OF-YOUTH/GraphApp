@@ -86,7 +86,7 @@ export const EditorProvider = ({ children }) => {
             addNodes,
             addRelations,
             network,
-            setNetwork
+            setNetwork,
         }}
             >
                 { children }

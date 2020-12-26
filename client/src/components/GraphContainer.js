@@ -23,7 +23,8 @@ function GraphContainer() {
         addNodes,
         addRelations,
         network,
-        setNetwork
+        setNetwork,
+        nodeProperties
     } = useAppEditor();
     const options = {
         autoResize: true,
@@ -85,10 +86,10 @@ function GraphContainer() {
                 setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            network.addNodeMode();
-            graphData.nodes.push({id: 9999, label: 12351, x: 1, y: 1});
-            network.selectNodes(graphData);
-            network.editNode();
+            //network.addNodeMode();
+            //graphData.nodes.push({id: 9999, label: 12351, x: 1, y: 1});
+            network.selectNodes(nodeProperties);
+            //network.editNode();
             console.log(graphData);
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
