@@ -43,7 +43,7 @@ export const EditorProvider = ({ children }) => {
         const map = nodeProperties.container;
         for (let i in nodes) {
             const node = nodes[i];
-            map.set(node.identity, {labels: node.labels, properties: node.properties});
+            map.set(node.identity, {labels: node.labels, properties: node.properties, x: node.x == undefined ? 0 : node.x, x: node.y == undefined ? 0 : node.y});
             newGraph.nodes.push({
                 id: node.identity,
                 label: `${node.identity}`,
