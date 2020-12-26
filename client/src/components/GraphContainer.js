@@ -84,7 +84,7 @@ function GraphContainer() {
                 setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            network.emit("addNode", {a:1, b:2});
+            network.interaction.drawView = false;
             if (selectedTool == 'add-node') {
                 fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
