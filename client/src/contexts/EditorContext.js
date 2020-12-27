@@ -56,7 +56,7 @@ export const EditorProvider = ({ children }) => {
         }
         
         setNodeProperties({container: map});
-        setGraphData({nodes: newGraph.nodes, edges: []});
+        setGraphData(data => { return {nodes: newGraph.nodes, edges: data.edges}});
     }
 
     function addNodes(nodes) {
