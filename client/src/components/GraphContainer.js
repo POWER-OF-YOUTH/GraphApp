@@ -20,7 +20,9 @@ function GraphContainer() {
         activeMarks,
         selectedEntity,
         setSelectedEntity,
+        addNode,
         addNodes,
+        addRelation,
         addRelations,
         network,
         setNetwork
@@ -76,7 +78,7 @@ function GraphContainer() {
                 const child = nodes[0];
                 fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=default`)
                     .then(response => response.json())
-                    .then(json => addRelations([{start: parent, end: child, type: 'default'}])) // TODO: set identity
+                    .then(json => addRelation({start: parent, end: child, type: 'default'})) // TODO: set identity
                     .catch(err => console.log(err));
 
                 setSelectedEntity({nodes: [], edges: []}) //Сбрасываем выделение
@@ -94,7 +96,7 @@ function GraphContainer() {
                     .then(json => {
                         json.data.response.x = event.pointer.canvas.x; //event.pointer.canvas - содержит координаты указателя.
                         json.data.response.y = event.pointer.canvas.y;
-                        addNodes([json.data.response])
+                        addNode(json.data.response)
                     });
                 // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }

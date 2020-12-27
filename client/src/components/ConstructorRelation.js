@@ -4,6 +4,7 @@ import { useAppEditor } from '../contexts/EditorContext';
 
 function ConstructorRelation({ onClick }) {
     const { relations } = useAppEditor();
+    
     let items = [];
     relations.container.forEach((value, key, theMap) => {
         items.push(

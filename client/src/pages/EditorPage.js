@@ -7,7 +7,7 @@ import config from '../config.json';
 
 function EditorPage() {
     const { account } = useAccount();
-    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes, addRelations, initializeNodes } = useAppEditor();
+    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes, addRelations, initializeNodes, initializeRelations } = useAppEditor();
 
     useEffect(() => {
         async function loadMarks() {
@@ -34,7 +34,8 @@ function EditorPage() {
             let url = `http://${config.host}/api/graph/getRelations?token=${account.token}`;
 
             const relationsResult = await (await fetch(url)).json();
-            addRelations(relationsResult.data);
+            
+            initializeRelations(relationsResult.data);
         }
 
         async function inner() {

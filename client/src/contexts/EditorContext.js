@@ -49,7 +49,7 @@ export const EditorProvider = ({ children }) => {
                 properties: node.properties});
             newGraph.nodes.push({
                 id: node.identity,
-                label: `${node.identity}`,
+                label: `${node.labels[0]}`,
                 shape: 'circle',
                 x: node.x != undefined ? node.x : 0,
                 y: node.y != undefined ? node.y : 0});
@@ -59,6 +59,53 @@ export const EditorProvider = ({ children }) => {
         setGraphData(data => { return {nodes: newGraph.nodes, edges: data.edges}});
     }
 
+    /**
+     * 
+     * @param {Array<{identity: number, start:number, end: number, type: string}>} relationsArray
+     */
+    function initializeRelations(relationsArray) {
+        const newGraph = {
+            edges: []
+        }
+
+        const map = relations.container;
+        for (let i in relationsArray) {
+            const relation = relationsArray[i];
+            map.set(relation.identity, relation);
+            newGraph.edges.push({from: relation.start, to: relation.end, label: relation.type});
+        }
+
+        setRelations({container: map});
+        setGraphData(data => { return {nodes: data.nodes, edges: data.edges.concat(newGraph.edges)}});
+    }
+
+    /**
+     * 
+     * @param {{identity: number, labels: Array<string>, properties: Array<any>}} node 
+     * @param {string} [shape] - circle | ellipse | box | diamond | square | ...
+     */
+    function addNode(node, shape = 'circle') {
+        const map = nodeProperties.container;
+        map.set(node.identity, {
+            labels: node.labels, 
+            properties: node.properties});
+
+        
+        let graphNode = {
+            id: node.identity,
+            label: `${node.labels[0]}`,
+            shape: 'circle',
+            x: node.x != undefined ? node.x : 0,
+            y: node.y != undefined ? node.y : 0}
+        
+        setNodeProperties({container: map});
+        setGraphData(data => { return {nodes: data.nodes.concat([graphNode]), edges: data.edges}});
+    }
+
+    /**
+     * 
+     * @param {Array<{identity: number, labels: Array<string>, properties: Array<any>}>} nodes
+     */
     function addNodes(nodes) {
         const newGraph = {
             nodes: []
@@ -71,7 +118,7 @@ export const EditorProvider = ({ children }) => {
                 properties: node.properties});
             newGraph.nodes.push({
                 id: node.identity,
-                label: `${node.identity}`,
+                label: `${node.labels[0]}`,
                 shape: 'circle',
                 x: node.x != undefined ? node.x : 0,
                 y: node.y != undefined ? node.y : 0});
@@ -81,6 +128,22 @@ export const EditorProvider = ({ children }) => {
         setGraphData(data => { return {nodes: data.nodes.concat(newGraph.nodes), edges: data.edges}});
     }
 
+    /**
+     * 
+     * @param {{identity: number, start:number, end: number, type: string}} relation 
+     */
+    function addRelation(relation) {
+        const map = relations.container;
+        map.set(relation.identity, relation);
+
+        setRelations({container: map});
+        setGraphData(data => { return {nodes: data.nodes, edges: data.edges.concat([{from: relation.start, to: relation.end, label: relation.type}])}});
+    }
+
+    /**
+     * 
+     * @param {Array<{identity: number, start:number, end: number, type: string}>} relationsArray
+     */
     function addRelations(relationsArray) {
         const newGraph = {
             edges: []
@@ -98,6 +161,7 @@ export const EditorProvider = ({ children }) => {
     return (
         <EditorContext.Provider value={{
             initializeNodes,
+            initializeRelations,
             connect,
             selectedTool,
             setSelectedTool,
@@ -111,7 +175,9 @@ export const EditorProvider = ({ children }) => {
             setSelectedEntity,
             relations,
             setRelations,
+            addNode,
             addNodes,
+            addRelation,
             addRelations,
             network,
             setNetwork
