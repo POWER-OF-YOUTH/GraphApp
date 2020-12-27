@@ -99,10 +99,8 @@ function GraphContainer() {
                 // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }
             else if (selectedTool == 'delete') {
-                let a = [];
-                console.log(selectedEntity);
-                //let edge = a.find((edge, index, arr) => edge.id === selectedEntity.edges[0].)
-                console.log(graphData);
+                let edge = graphData.edges.find((edge, index, arr) => edge.id === selectedEntity.edges[0]);
+                console.log(edge);
             }
         }
     };
