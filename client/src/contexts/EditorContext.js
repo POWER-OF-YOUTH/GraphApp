@@ -36,27 +36,6 @@ export const EditorProvider = ({ children }) => {
     const [selectedEntity, setSelectedEntity] = useState({nodes: [], edges: []});
     const [network, setNetwork] = useState(undefined);
 
-    function initialize(nodes, edges) {
-        const map = new Map();
-        for (let i in nodes) {
-            const node = nodes[i];
-            map.set(node.identity, {
-                labels: node.labels, 
-                properties: node.properties, 
-                x: node.x != undefined ? node.x : 0,
-                y: node.y != undefined ? node.y : 0});
-            newGraph.nodes.push({
-                id: node.identity,
-                label: `${node.identity}`,
-                shape: 'circle',
-                x: node.x != undefined ? node.x : 0,
-                y: node.y != undefined ? node.y : 0});
-        }
-        
-        setNodeProperties({container: map});
-        setGraphData({nodes: nodes, edges: edges});
-    }
-
     function addNodes(nodes) {
         const newGraph = {
             nodes: []
