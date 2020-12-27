@@ -4,6 +4,7 @@ import history from '../history';
 import Editor from '../components/Editor';
 import { useAppEditor } from '../contexts/EditorContext';
 import config from '../config.json';
+import { initialize } from '../../../database';
 
 function EditorPage() {
     const { account } = useAccount();
@@ -20,9 +21,17 @@ function EditorPage() {
                 map.set(arr[i].type, arr[i].properties);
             setMarks({container: map});
 
-            const nodes = await (await fetch(`http://${config.host}/api/graph/getNodes?token=${account.token}`)).json();
+            const response = await (await fetch(`http://${config.host}/api/graph/getNodes?token=${account.token}`)).json();
             //map = nodeProperties.container;
-            addNodes(nodes.data.response);
+
+            let nodes = response.data.response.map((nodeData, index) => { return {
+                id: nodeData.identity,
+                label: `${nodeData.identity}`,
+                shape: 'circle',
+            }});
+
+            initialize(nodes, [])
+            //addNodes(response.data.response);
             //setNodeProperties({container: map});
 
             const relationsResult = await (await fetch(`http://${config.host}/api/graph/getRelations?token=${account.token}`)).json();
