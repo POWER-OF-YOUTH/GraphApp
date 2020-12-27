@@ -10,24 +10,44 @@ function EditorPage() {
     const { marks, setMarks, nodeProperties, setNodeProperties, addNodes, addRelations } = useAppEditor();
 
     useEffect(() => {
+        async function loadMarks() {
+            let url = `http://${config.host}/api/graph/getMarksInfo?token=${account.token}`;
+
+            const marksInfo = (await (await fetch(url)).json()).data.response;
+            
+            let marksMap = new Map();
+            for (let i = 0; i < marksInfo.length; i++)
+                marksMap.set(marksInfo[i].type, marksInfo[i].properties);
+            
+            setMarks({container: marksMap});
+        }
+
+        async function loadNodes() {
+            let url = `http://${config.host}/api/graph/getNodes?token=${account.token}`;
+
+            const nodes = await (await fetch(url)).json();
+            let map = nodeProperties.container;
+            addNodes(nodes.data.response);
+        }
+
+        async function loadRelations() {
+            let url = `http://${config.host}/api/graph/getRelations?token=${account.token}`;
+
+            const relationsResult = await (await fetch(url)).json();
+            addRelations(relationsResult.data);
+        }
+
         async function inner() {
             if (!account)
             return;
-            let marksInfo = await (await fetch(`http://${config.host}/api/graph/getMarksInfo?token=${account.token}`)).json();
-            const arr = marksInfo.data.response;
-            let map = marks.container;
-            for (let i in arr)
-                map.set(arr[i].type, arr[i].properties);
-            setMarks({container: map});
 
-            const nodes = await (await fetch(`http://${config.host}/api/graph/getNodes?token=${account.token}`)).json();
-            map = nodeProperties.container;
-            addNodes(nodes.data.response);
-            setNodeProperties({container: map});
+            loadMarks();
 
-            const relationsResult = await (await fetch(`http://${config.host}/api/graph/getRelations?token=${account.token}`)).json();
-            addRelations(relationsResult.data);
+            loadNodes();
+
+            loadRelations();
         }
+
         inner();
     }, []);
 
