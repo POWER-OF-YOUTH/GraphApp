@@ -99,7 +99,7 @@ function GraphContainer() {
                 // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }
             else if (selectedTool == 'delete') {
-                console.log(event);
+                console.log(graphData);
             }
         }
     };
