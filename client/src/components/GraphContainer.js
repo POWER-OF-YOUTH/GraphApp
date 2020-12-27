@@ -101,6 +101,7 @@ function GraphContainer() {
             else if (selectedTool == 'delete') {
                 let edge = graphData.edges.find((edge, index, arr) => edge.id === selectedEntity.edges[0]);
                 console.log(edge);
+                console.log(selectedEntity);
             }
         }
     };
