@@ -98,6 +98,20 @@ function GraphContainer() {
                     });
                 // api/graph/createNode?token=someToken&mark=type1&mark=type2
             }
+            else if (selectedTool == 'delete') {
+                if (selectedEntity.nodes.length > 0) {
+                    let node = graphData.nodes.find((node, index, arr) => node.id === selectedEntity.nodes[0]);
+                    if(node != undefined)
+                        fetch(`http://${config.host}/api/graph/deleteNode?token=${account.token}&id=${node.id}`);
+                }
+                else if (selectedEntity.edges.length > 0) {
+                    let edge = graphData.edges.find((edge, index, arr) => edge.id === selectedEntity.edges[0]);
+                    if(edge != undefined)
+                        fetch(`http://${config.host}/api/graph/deleteRelation?token=${account.token}&from=${edge.from}&to=${edge.to}&name=${edge.label}`);
+                }
+                setSelectedEntity({nodes: [], edges: []})
+                network.deleteSelected();
+            }
         }
     };
 

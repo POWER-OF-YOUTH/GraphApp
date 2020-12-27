@@ -41,6 +41,7 @@ function Editor() {
             <ToolButton typeoficon={'cursor'} hint="Инструмент выделения" />,
             <ToolButton onClick={() => setActiveMarkOpen(true)} typeoficon={'add-node'} hint="Инструмент узлов" />,
             <ToolButton typeoficon={'add-relation'} hint="Инструмент связей" />,
+            <ToolButton typeoficon={'delete'} hint="Инструмент удаления" />,
             <ToolButton typeoficon={'filter'} hint="Фильтры" />,
             <IconButton onClick={() => setAddMarkOpen(true) }>
                 <ArrowDownwardIcon />
