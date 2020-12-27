@@ -21,9 +21,9 @@ function EditorPage() {
             setMarks({container: map});
 
             const nodes = await (await fetch(`http://${config.host}/api/graph/getNodes?token=${account.token}`)).json();
-            //map = nodeProperties.container;
+            map = nodeProperties.container;
             addNodes(nodes.data.response);
-            //setNodeProperties({container: map});
+            setNodeProperties({container: map});
 
             const relationsResult = await (await fetch(`http://${config.host}/api/graph/getRelations?token=${account.token}`)).json();
             addRelations(relationsResult.data);
