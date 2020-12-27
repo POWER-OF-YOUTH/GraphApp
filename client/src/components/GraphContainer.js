@@ -106,7 +106,7 @@ function GraphContainer() {
                 }
                 else if (selectedEntity.edges.length > 0) {
                     let edge = graphData.edges.find((edge, index, arr) => edge.id === selectedEntity.edges[0]);
-                    if(node != undefined)
+                    if(edge != undefined)
                         fetch(`http://${config.host}/api/graph/deleteRelation?token=${account.token}&from=${edge.from}&to=${edge.to}&name=${edge.label}`);
                 }
                 network.deleteSelected();
