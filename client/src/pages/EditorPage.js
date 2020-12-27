@@ -41,11 +41,11 @@ function EditorPage() {
             if (!account)
             return;
 
-            loadMarks();
-
             loadRelations();
 
             loadNodes();
+
+            loadMarks();
         }
 
         inner();
