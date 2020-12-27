@@ -43,9 +43,9 @@ function EditorPage() {
 
             loadMarks();
 
-            loadNodes();
-
             loadRelations();
+
+            loadNodes();
         }
 
         inner();
