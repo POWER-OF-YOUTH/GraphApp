@@ -109,6 +109,7 @@ function GraphContainer() {
                     if(edge != undefined)
                         fetch(`http://${config.host}/api/graph/deleteRelation?token=${account.token}&from=${edge.from}&to=${edge.to}&name=${edge.label}`);
                 }
+                setSelectedEntity({nodes: [], edges: []})
                 network.deleteSelected();
             }
         }
