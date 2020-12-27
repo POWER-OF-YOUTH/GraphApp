@@ -231,7 +231,7 @@ module.exports.getRelations = apiTools.parameterizedHandler(["token"], async (ob
 
     let response = [];
 
-    let result = driver.session().run(`MATCH (:Display)-[rel]-(:Display) RETURN rel AS relation`).subscribe(
+    let result = driver.session().run(`MATCH (:Display)-[rel]->(:Display) RETURN rel AS relation`).subscribe(
         {
             onNext: (record) => response.push(record.get("relation")),
             onCompleted: () => apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", response))

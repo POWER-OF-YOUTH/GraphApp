@@ -7,7 +7,7 @@ import config from '../config.json';
 
 function EditorPage() {
     const { account } = useAccount();
-    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes, addRelations } = useAppEditor();
+    const { marks, setMarks, nodeProperties, setNodeProperties, addNodes, addRelations, initializeNodes } = useAppEditor();
 
     useEffect(() => {
         async function loadMarks() {
@@ -27,7 +27,7 @@ function EditorPage() {
 
             const nodes = await (await fetch(url)).json();
             let map = nodeProperties.container;
-            addNodes(nodes.data.response);
+            initializeNodes(nodes.data.response);
         }
 
         async function loadRelations() {

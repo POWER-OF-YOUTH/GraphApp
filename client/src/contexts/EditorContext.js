@@ -36,6 +36,29 @@ export const EditorProvider = ({ children }) => {
     const [selectedEntity, setSelectedEntity] = useState({nodes: [], edges: []});
     const [network, setNetwork] = useState(undefined);
 
+    function initializeNodes(nodes) {
+        const newGraph = {
+            nodes: []
+        }
+
+        const map = nodeProperties.container;
+        for (let i in nodes) {
+            const node = nodes[i];
+            map.set(node.identity, {
+                labels: node.labels, 
+                properties: node.properties});
+            newGraph.nodes.push({
+                id: node.identity,
+                label: `${node.identity}`,
+                shape: 'circle',
+                x: node.x != undefined ? node.x : 0,
+                y: node.y != undefined ? node.y : 0});
+        }
+        
+        setNodeProperties({container: map});
+        setGraphData({nodes: newGraph.nodes, edges: []});
+    }
+
     function addNodes(nodes) {
         const newGraph = {
             nodes: []
@@ -62,20 +85,19 @@ export const EditorProvider = ({ children }) => {
         const newGraph = {
             edges: []
         }
-
         const map = relations.container;
         for (let i in relationsArray) {
             const relation = relationsArray[i];
             map.set(relation.identity, relation);
             newGraph.edges.push({from: relation.start, to: relation.end, label: relation.type});
         }
-
         setRelations({container: map});
         setGraphData(data => { return {nodes: data.nodes, edges: data.edges.concat(newGraph.edges)}});
     }
 
     return (
         <EditorContext.Provider value={{
+            initializeNodes,
             connect,
             selectedTool,
             setSelectedTool,
