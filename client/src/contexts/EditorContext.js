@@ -72,7 +72,7 @@ export const EditorProvider = ({ children }) => {
         for (let i in relationsArray) {
             const relation = relationsArray[i];
             map.set(relation.identity, relation);
-            newGraph.edges.push({from: relation.start, to: relation.end, label: relation.type});
+            newGraph.edges.push({id: relation.identity, from: relation.start, to: relation.end, label: relation.type});
         }
 
         setRelations({container: map});
@@ -137,7 +137,7 @@ export const EditorProvider = ({ children }) => {
         map.set(relation.identity, relation);
 
         setRelations({container: map});
-        setGraphData(data => { return {nodes: data.nodes, edges: data.edges.concat([{from: relation.start, to: relation.end, label: relation.type}])}});
+        setGraphData(data => { return {nodes: data.nodes, edges: data.edges.concat([{id: relation.identity, from: relation.start, to: relation.end, label: relation.type}])}});
     }
 
     /**
