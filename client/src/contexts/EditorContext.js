@@ -171,6 +171,7 @@ export const EditorProvider = ({ children }) => {
             setGraphData,
             nodeProperties,
             setNodeProperties,
+            setActiveMarks,
             selectedEntity,
             setSelectedEntity,
             relations,

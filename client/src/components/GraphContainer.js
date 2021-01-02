@@ -91,7 +91,7 @@ function GraphContainer() {
         },
         click: function(event) {
             if (selectedTool == 'add-node' && activeMarks.size > 0) { //TODO: Можно ускорить!
-                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
+                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
                     .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
                     .then(response => response.json())
@@ -100,7 +100,7 @@ function GraphContainer() {
                         json.data.response.y = event.pointer.canvas.y;
                         addNode(json.data.response)
                     });
-                // api/graph/createNode?token=someToken&mark=type1&mark=type2
+                // api/graph/createNode?token=someToken&mark=type1+type2
             }
             else if (selectedTool == 'delete') {
                 if (selectedEntity.nodes.length > 0) {
