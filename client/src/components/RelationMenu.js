@@ -24,18 +24,22 @@ function RelationMenu({opened, setOpen}) {
 
     function handleTextFieldChange(event) {
         setTextFieldValue(event.target.value.replace(' ', '_'));
+        setErrorOpen(false);
     }
 
     function handleClose() {
         setOpen(false);
+        setErrorOpen(false);
         setTextFieldValue('');
+        setCreatedRelationName('');
     }
 
     function handleOk() {
         if(textFieldValue !== '') {
-            setErrorOpen(false);
             setCreatedRelationName(textFieldValue);
-            handleClose();
+            setErrorOpen(false);
+            setTextFieldValue('');
+            setOpen(false);
         }
         else
             setErrorOpen(true);  
