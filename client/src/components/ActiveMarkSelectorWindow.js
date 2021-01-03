@@ -91,7 +91,7 @@ function ActiveMarkSelectorWindow({opened, setOpen}) {
                                     label={k}
                                 />
                             })}
-                            <Button onClick={ok}>Ок</Button>
+                            <Button onClick={ok}>Ok</Button>
                         </form>
                     </div>
                 </DialogContent>

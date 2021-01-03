@@ -27,6 +27,7 @@ function GraphContainer() {
         addRelations,
         network,
         setNetwork,
+        createdRelationName,
         nodeProperties
     } = useAppEditor();
     const options = {
@@ -75,12 +76,16 @@ function GraphContainer() {
     const events = {
         select: function (event) {
             const { nodes, edges } = event;
-            if (selectedTool == 'add-relation' && selectedEntity.nodes.length == 1 && nodes.length == 1 && selectedEntity.nodes[0] != nodes[0]) {
+            if (selectedTool == 'add-relation' 
+            && selectedEntity.nodes.length == 1 
+            && nodes.length == 1 
+            && selectedEntity.nodes[0] != nodes[0]
+            && createdRelationName !== '') {
                 const parent = selectedEntity.nodes[0];
                 const child = nodes[0];
-                fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=default`)
+                fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=${createdRelationName}`)
                     .then(response => response.json())
-                    .then(json => addRelation({identity: json.data.identity, start: parent, end: child, type: 'default'})) // TODO: set identity
+                    .then(json => addRelation({identity: json.data.identity, start: parent, end: child, type: createdRelationName})) // TODO: set identity
                     .catch(err => console.log(err));
 
                 setSelectedEntity({nodes: [], edges: []}) //Сбрасываем выделение

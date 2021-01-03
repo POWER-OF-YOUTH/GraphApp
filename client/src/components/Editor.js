@@ -9,6 +9,7 @@ import { IconButton } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddMark from './AddMark';
 import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
+import RelationMenu from './RelationMenu'
 import ConsturctorUzla from './ConstructorUzla';
 import ConstructorRelation from'./ConstructorRelation';
 import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
@@ -31,6 +32,8 @@ const spisokRelation = (
 function Editor() {
     const { setTools, setRightDrawer, } = useNavigation();
     const { connect, selectedEntity, nodeProperties } = useAppEditor();
+    
+    const [isRelationMenuOpen, setIsRelationMenuOpen] = useState(false);
     const [addMarkOpen, setAddMarkOpen] = useState(false);
     const [activeMarkOpen, setActiveMarkOpen] = useState(false);
 
@@ -40,7 +43,7 @@ function Editor() {
         setTools([
             <ToolButton typeoficon={'cursor'} hint="Инструмент выделения" />,
             <ToolButton onClick={() => setActiveMarkOpen(true)} typeoficon={'add-node'} hint="Инструмент узлов" />,
-            <ToolButton typeoficon={'add-relation'} hint="Инструмент связей" />,
+            <ToolButton onClick={() => setIsRelationMenuOpen(true)} typeoficon={'add-relation'} hint="Инструмент связей" />,
             <ToolButton typeoficon={'delete'} hint="Инструмент удаления" />,
             <ToolButton typeoficon={'filter'} hint="Фильтры" />,
             <IconButton onClick={() => setAddMarkOpen(true) }>
@@ -75,6 +78,7 @@ function Editor() {
         <GraphContainer/>
         <AddMark opened={addMarkOpen} setOpen={setAddMarkOpen} />
         <ActiveMarkSelectorWindow opened={activeMarkOpen} setOpen={setActiveMarkOpen} />
+        <RelationMenu opened={isRelationMenuOpen} setOpen={setIsRelationMenuOpen} />
     </div>
     );
 }

@@ -35,6 +35,7 @@ export const EditorProvider = ({ children }) => {
     const [activeMarks, setActiveMarks] = useState(new Set());
     const [selectedEntity, setSelectedEntity] = useState({nodes: [], edges: []});
     const [network, setNetwork] = useState(undefined);
+    const [createdRelationName, setCreatedRelationName] = useState('');
 
     function initializeNodes(nodes) {
         const newGraph = {
@@ -181,6 +182,8 @@ export const EditorProvider = ({ children }) => {
             addRelation,
             addRelations,
             network,
+            createdRelationName,
+            setCreatedRelationName,
             setNetwork
         }}
             >
