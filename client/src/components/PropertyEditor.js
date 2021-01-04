@@ -25,10 +25,6 @@ function PropertyEditor({ localId, property, setPropertyName, setRequired, setDe
         <Paper className={classes.paper}>
             <form className={classes.propRoot}>
                 <TextField id="in-login" label="Название свойства" value={property.propertyName} onChange={event => setPropertyName(localId, event.target.value)} required />
-                <FormControlLabel
-                    control={<Checkbox checked={property.required} onChange={event => setRequired(localId, event.target.checked)} name="in-required" />}
-                    label="Необходимо указать"
-                />
                 <TextField id="in-default" label="Значение по-умолчанию" type="text" value={property.defaultValue} onChange={event => setDefaultValue(localId, event.target.value)} required />
                 <Button
                     variant="contained"

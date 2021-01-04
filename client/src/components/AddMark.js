@@ -94,7 +94,7 @@ function AddMark({ opened, setOpen }) {
                                     key={index}
                                     setPropertyName={(i, v) => setField(i, 'propertyName', v)}
                                     setDefaultValue={(i, v) => setField(i, 'default', v)}
-                                    setRequired={(i, v) => setField(i, 'require', v)}
+                                    setRequired={(i, v) => setField(i, 'require', true)}
                                     deleteProperty={deleteProperty}
                                 />
 
