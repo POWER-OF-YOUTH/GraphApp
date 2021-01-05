@@ -20,10 +20,15 @@ function GraphContainer() {
         activeMarks,
         selectedEntity,
         setSelectedEntity,
+        addNode,
         addNodes,
+        relations,
+        addRelation,
         addRelations,
         network,
-        setNetwork
+        setNetwork,
+        createdRelationName,
+        nodeProperties
     } = useAppEditor();
     const options = {
         autoResize: true,
@@ -71,30 +76,52 @@ function GraphContainer() {
     const events = {
         select: function (event) {
             const { nodes, edges } = event;
-            if (selectedTool == 'add-relation' && selectedEntity.nodes.length == 1 && nodes.length == 1 && selectedEntity.nodes[0] != nodes[0]) {
+            if (selectedTool == 'add-relation' 
+            && selectedEntity.nodes.length == 1 
+            && nodes.length == 1 
+            && selectedEntity.nodes[0] != nodes[0]
+            && createdRelationName !== '') {
                 const parent = selectedEntity.nodes[0];
                 const child = nodes[0];
-                fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=default`)
+                fetch(`http://${config.host}/api/graph/createRelation?token=${account.token}&from=${parent}&to=${child}&name=${createdRelationName}`)
                     .then(response => response.json())
-                    .then(json => addRelations([{start: parent, end: child, type: 'default'}])) // TODO: set identity
+                    .then(json => addRelation({identity: json.data.identity, start: parent, end: child, type: createdRelationName})) // TODO: set identity
                     .catch(err => console.log(err));
+
                 setSelectedEntity({nodes: [], edges: []}) //Сбрасываем выделение
+                network.unselectAll();
             }
             else
                 setSelectedEntity({nodes, edges});
         },
         click: function(event) {
-            if (selectedTool == 'add-node') { //TODO: Можно ускорить!
-                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${activeMarks.values().next().value}`)
+            if (selectedTool == 'add-node' && activeMarks.size > 0) { //TODO: Можно ускорить!
+                fetch(`http://${config.host}/api/graph/createNode?token=${account.token}&mark=${Array.from(activeMarks).join('+')}`)
                     .then(response => response.json())
                     .then(async json => await fetch(`http://${config.host}/api/graph/getNode?token=${account.token}&id=${json.data.identity}`))
                     .then(response => response.json())
                     .then(json => {
                         json.data.response.x = event.pointer.canvas.x; //event.pointer.canvas - содержит координаты указателя.
                         json.data.response.y = event.pointer.canvas.y;
-                        addNodes([json.data.response])
+                        addNode(json.data.response)
                     });
-                // api/graph/createNode?token=someToken&mark=type1&mark=type2
+                // api/graph/createNode?token=someToken&mark=type1+type2
+            }
+            else if (selectedTool == 'delete') {
+                if (selectedEntity.nodes.length > 0) {
+                    let node = graphData.nodes.find((node, index, arr) => node.id === selectedEntity.nodes[0]);
+                    if(node != undefined)
+                        fetch(`http://${config.host}/api/graph/deleteNode?token=${account.token}&id=${node.id}`);
+                    nodeProperties.container.delete(node.id)
+                }
+                else if (selectedEntity.edges.length > 0) {
+                    let edge = graphData.edges.find((edge, index, arr) => edge.id === selectedEntity.edges[0]);
+                    if(edge != undefined)
+                        fetch(`http://${config.host}/api/graph/deleteRelation?token=${account.token}&from=${edge.from}&to=${edge.to}&name=${edge.label}`);
+                    relations.container.delete(selectedEntity.edges[0]);
+                }
+                setSelectedEntity({nodes: [], edges: []})
+                network.deleteSelected();
             }
         }
     };

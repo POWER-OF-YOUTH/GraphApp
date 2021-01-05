@@ -189,9 +189,13 @@ module.exports.getNode = apiTools.parameterizedHandler(["token", "id"], async (o
     }
 
     try {
+        let a = [];
         let response = await driver.session().run(`MATCH (n:Display) WHERE ID(n)=${obj.id} RETURN n AS node`);
-        if(response.records.length > 0)
-            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", { response: response.records[0].get("node") }));
+        if(response.records.length > 0) {
+            let node = response.records[0].get("node");
+            node.labels.splice(node.labels.findIndex((value, index) => value === "Display"), 1);
+            apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", { response: node }));
+        }
         else 
             apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!"));
     }
@@ -211,10 +215,12 @@ module.exports.getNodes = apiTools.parameterizedHandler(["token"], async (obj, r
     let response = [];
     driver
         .session()
-        .run("MATCH (n:Display) RETURN n")
+        .run("MATCH (n:Display) RETURN n AS node")
         .subscribe({
             onNext: record => {
-                response.push(record.get("n"));
+                let node = record.get("node");
+                node.labels.splice(node.labels.findIndex((value, index) => value === "Display"), 1);
+                response.push(node);
             },
             onCompleted: () => {
                 apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", {response: response}));
@@ -231,7 +237,7 @@ module.exports.getRelations = apiTools.parameterizedHandler(["token"], async (ob
 
     let response = [];
 
-    let result = driver.session().run(`MATCH (:Display)-[rel]-(:Display) RETURN rel AS relation`).subscribe(
+    let result = driver.session().run(`MATCH (:Display)-[rel]->(:Display) RETURN rel AS relation`).subscribe(
         {
             onNext: (record) => response.push(record.get("relation")),
             onCompleted: () => apiTools.sendReport(res, new ApiReport("ok", 0, "Successful!", response))

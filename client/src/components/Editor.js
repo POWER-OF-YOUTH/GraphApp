@@ -7,11 +7,12 @@ import GraphContainer from './GraphContainer';
 import EditorRightMenuTab from './EditorRightMenuTab';
 import { IconButton } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import AddMark from './AddMark';
+import AddMarkDialog from './AddMarkDialog';
 import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
-import ConsturctorUzla from './ConstructorUzla';
-import ConstructorRelation from'./ConstructorRelation';
-import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
+import RelationMenu from './RelationNameDialog'
+import NodesList from './NodesList';
+import RelationsList from'./RelationsList';
+import ActiveMarkSelectionDialog from './ActiveMarkSelectionDialog';
 import { useAccount } from '../contexts/AccountContext';
 import PropertiesOverview from './PropertiesOverview';
 import config from '../config.json';
@@ -19,18 +20,20 @@ import config from '../config.json';
  const spisokNode = (
  <div>
      <List component="nav">
-        <ConsturctorUzla onClick={(event, id) => console.log("Are you clicking, son?")} />
+        <NodesList onClick={(event, id) => console.log("Are you clicking, son?")} />
     </List>
 </div>);
-const spisokRelation = (
+const relationsList = (
     <div>
         <List component="nav">
-            <ConstructorRelation onClick={(event, id) => console.log("Are you clicking, son?")} />
+            <RelationsList onClick={(event, id) => console.log("Are you clicking, son?")} />
         </List>
     </div>);
 function Editor() {
     const { setTools, setRightDrawer, } = useNavigation();
     const { connect, selectedEntity, nodeProperties } = useAppEditor();
+    
+    const [isRelationMenuOpen, setIsRelationMenuOpen] = useState(false);
     const [addMarkOpen, setAddMarkOpen] = useState(false);
     const [activeMarkOpen, setActiveMarkOpen] = useState(false);
 
@@ -40,7 +43,8 @@ function Editor() {
         setTools([
             <ToolButton typeoficon={'cursor'} hint="Инструмент выделения" />,
             <ToolButton onClick={() => setActiveMarkOpen(true)} typeoficon={'add-node'} hint="Инструмент узлов" />,
-            <ToolButton typeoficon={'add-relation'} hint="Инструмент связей" />,
+            <ToolButton onClick={() => setIsRelationMenuOpen(true)} typeoficon={'add-relation'} hint="Инструмент связей" />,
+            <ToolButton typeoficon={'delete'} hint="Инструмент удаления" />,
             <ToolButton typeoficon={'filter'} hint="Фильтры" />,
             <IconButton onClick={() => setAddMarkOpen(true) }>
                 <ArrowDownwardIcon />
@@ -55,7 +59,7 @@ function Editor() {
                     },
                     {
                         title: 'Связи',
-                        body: spisokRelation
+                        body: relationsList
                     }
                 ]} />
                 <EditorRightMenuTab panels={[
@@ -72,8 +76,9 @@ function Editor() {
     return (
     <div>
         <GraphContainer/>
-        <AddMark opened={addMarkOpen} setOpen={setAddMarkOpen} />
-        <ActiveMarkSelectorWindow opened={activeMarkOpen} setOpen={setActiveMarkOpen} />
+        <AddMarkDialog opened={addMarkOpen} setOpen={setAddMarkOpen} />
+        <ActiveMarkSelectionDialog opened={activeMarkOpen} setOpen={setActiveMarkOpen} />
+        <RelationMenu opened={isRelationMenuOpen} setOpen={setIsRelationMenuOpen} />
     </div>
     );
 }

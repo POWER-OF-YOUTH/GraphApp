@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import Snackbar from '@material-ui/core/Snackbar';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { TextField, makeStyles } from '@material-ui/core';
-import PropertyEditor from './PropertyEditor';
+import MarkProperty from './MarkProperty';
 import { useAccount } from '../contexts/AccountContext';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useAppEditor } from '../contexts/EditorContext';
@@ -22,32 +23,49 @@ const useStyles = makeStyles((theme) => ({
 
 let counter = 2;
 
-function ActiveMarkSelectorWindow({opened, setOpen}) {
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function ActiveMarkSelectionDialog({opened, setOpen}) {
+    const [selectedMarks, setSelectMarks] = React.useState(new Set());
+    const [errorOpen, setErrorOpen] = React.useState(false);
+
     const classes = useStyles();
     const { account } = useAccount();
-    const { marks, activeMarks } = useAppEditor();
+    const { marks, activeMarks, setActiveMarks } = useAppEditor();
 
     const handleClose = () => {
+        setErrorOpen(false);
         setOpen(false);
     };
 
     function select(key, value) {
-        if (value)
-            activeMarks.add(key);
+        if (value) {
+            setErrorOpen(false);
+            selectedMarks.add(key);
+        }
         else
-            activeMarks.delete(key);
-    }
-
-    if (opened) {
-        activeMarks.clear();
+            selectedMarks.delete(key);
     }
 
     function ok(event) {
-        handleClose();
+        if(selectedMarks.size > 0) {
+            setActiveMarks(selectedMarks);
+            setSelectMarks(new Set());
+            handleClose();
+        }
+        else
+            setErrorOpen(true);
     }
 
     return (
         <div>
+            <Snackbar open={errorOpen} autoHideDuration={3000}>
+                <Alert severity="error">
+                    Выберите хотя бы одну метку!
+                </Alert>
+            </Snackbar>
             <Dialog
                 open={opened}
                 onClose={handleClose}
@@ -73,7 +91,7 @@ function ActiveMarkSelectorWindow({opened, setOpen}) {
                                     label={k}
                                 />
                             })}
-                            <Button onClick={ok}>Ок</Button>
+                            <Button onClick={ok}>Ok</Button>
                         </form>
                     </div>
                 </DialogContent>
@@ -82,4 +100,4 @@ function ActiveMarkSelectorWindow({opened, setOpen}) {
     );
 }
 
-export default ActiveMarkSelectorWindow;
+export default ActiveMarkSelectionDialog;
