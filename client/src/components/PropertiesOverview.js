@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAppEditor } from '../contexts/EditorContext';
+import PropertyEditor from './PropertyEditor';
 
 function PropertiesOverview() {
     const {selectedEntity, nodeProperties} = useAppEditor();
@@ -11,7 +12,7 @@ function PropertiesOverview() {
     const value = nodeProperties.container.get(id);
     let result = [<h3>Свойства ноды [{id} : {value.labels[0]}]</h3>];
     for (let i in value.properties) {
-        result.push(<p>{i}: {value.properties[i]}</p>);
+        result.push(<PropertyEditor propertyName={i} nodeId={id} defaultValue={value.properties[i]} />);
     }
     return result;
 }

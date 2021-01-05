@@ -1,4 +1,8 @@
+import config from '../config.json';
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useAccount } from "../contexts/AccountContext";
+
 
 
 const EditorContext = createContext();
@@ -8,6 +12,7 @@ export const useAppEditor = () => {
 }
 
 export const EditorProvider = ({ children }) => {
+    const { account } = useAccount();
     
     function connect() {
 
@@ -105,6 +110,24 @@ export const EditorProvider = ({ children }) => {
 
     /**
      * 
+     * @param {number} id 
+     * @param {string} propertyName 
+     * @param {any} value 
+     */
+    function updateNodeProperty(id, propertyName, value) {
+        const map = nodeProperties.container;
+        
+        const labels = map.get(id).labels;
+        const properties = map.get(id).properties;
+        properties[propertyName] = value;
+        map.set(id, {labels: labels, properties: properties});
+
+        setNodeProperties({container: map});
+        fetch(`http://${config.host}/api/graph/editNode?token=${account.token}&id=${id}&name=${propertyName}&value=${value}`);
+    }
+
+    /**
+     * 
      * @param {Array<{identity: number, labels: Array<string>, properties: Array<any>}>} nodes
      */
     function addNodes(nodes) {
@@ -181,6 +204,7 @@ export const EditorProvider = ({ children }) => {
             addNodes,
             addRelation,
             addRelations,
+            updateNodeProperty,
             network,
             createdRelationName,
             setCreatedRelationName,

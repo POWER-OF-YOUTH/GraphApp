@@ -23,7 +23,7 @@ function RelationMenu({opened, setOpen}) {
     const [errorOpen, setErrorOpen] = React.useState(false);
 
     function handleTextFieldChange(event) {
-        setTextFieldValue(event.target.value.replace(' ', '_'));
+        setTextFieldValue(event.target.value.replaceAll(' ', '_'));
         setErrorOpen(false);
     }
 
