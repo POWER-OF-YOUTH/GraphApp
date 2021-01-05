@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { TextField, makeStyles } from '@material-ui/core';
-import PropertyEditor from './PropertyEditor';
+import MarkProperty from './MarkProperty';
 import { useAccount } from '../contexts/AccountContext';
 import MuiAlert from '@material-ui/lab/Alert';
 import config from '../config.json';
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 let counter = 2;
 
-function AddMark({ opened, setOpen }) {
+function AddMarkDialog({ opened, setOpen }) {
     const classes = useStyles();
     const { account } = useAccount();
     const [name, setName] = useState('');
@@ -88,7 +88,7 @@ function AddMark({ opened, setOpen }) {
                         <form className={classes.root} onSubmit={submit}>
                             <TextField id="in-name" label="Название" value={name} onChange={event => setName(event.target.value)} required />
                             {properties.map(function (property, index) {
-                                return <PropertyEditor
+                                return <MarkProperty
                                     property={property}
                                     localId={index}
                                     key={index}
@@ -113,4 +113,4 @@ function AddMark({ opened, setOpen }) {
     );
 }
 
-export default AddMark;
+export default AddMarkDialog;

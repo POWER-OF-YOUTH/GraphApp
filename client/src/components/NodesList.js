@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { useAppEditor } from '../contexts/EditorContext';
 
-function ConsturctorUzla({ onClick }) {
+function NodesList({ onClick }) {
     const { nodeProperties, network, setSelectedEntity} = useAppEditor();
 
     function selectNode(id) {
@@ -26,4 +26,4 @@ function ConsturctorUzla({ onClick }) {
     );
 }
 
-export default ConsturctorUzla;
+export default NodesList;

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function PropertyEditor({ localId, property, setPropertyName, setRequired, setDefaultValue, deleteProperty }) {
+function MarkProperty({ localId, property, setPropertyName, setRequired, setDefaultValue, deleteProperty }) {
     const classes = useStyles();
 
     return (
@@ -39,4 +39,4 @@ function PropertyEditor({ localId, property, setPropertyName, setRequired, setDe
     );
 }
 
-export default PropertyEditor;
+export default MarkProperty;

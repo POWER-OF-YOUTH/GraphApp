@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { TextField, makeStyles } from '@material-ui/core';
-import PropertyEditor from './PropertyEditor';
+import MarkProperty from './MarkProperty';
 import { useAccount } from '../contexts/AccountContext';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useAppEditor } from '../contexts/EditorContext';
@@ -27,7 +27,7 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function ActiveMarkSelectorWindow({opened, setOpen}) {
+function ActiveMarkSelectionDialog({opened, setOpen}) {
     const [selectedMarks, setSelectMarks] = React.useState(new Set());
     const [errorOpen, setErrorOpen] = React.useState(false);
 
@@ -100,4 +100,4 @@ function ActiveMarkSelectorWindow({opened, setOpen}) {
     );
 }
 
-export default ActiveMarkSelectorWindow;
+export default ActiveMarkSelectionDialog;

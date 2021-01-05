@@ -7,12 +7,12 @@ import GraphContainer from './GraphContainer';
 import EditorRightMenuTab from './EditorRightMenuTab';
 import { IconButton } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import AddMark from './AddMark';
+import AddMarkDialog from './AddMarkDialog';
 import {List,ListItem,ListItemIcon,ListItemText} from'@material-ui/core';
-import RelationMenu from './RelationMenu'
-import ConsturctorUzla from './ConstructorUzla';
-import ConstructorRelation from'./ConstructorRelation';
-import ActiveMarkSelectorWindow from './ActiveMarkSelectorWindow';
+import RelationMenu from './RelationNameDialog'
+import NodesList from './NodesList';
+import RelationsList from'./RelationsList';
+import ActiveMarkSelectionDialog from './ActiveMarkSelectionDialog';
 import { useAccount } from '../contexts/AccountContext';
 import PropertiesOverview from './PropertiesOverview';
 import config from '../config.json';
@@ -20,13 +20,13 @@ import config from '../config.json';
  const spisokNode = (
  <div>
      <List component="nav">
-        <ConsturctorUzla onClick={(event, id) => console.log("Are you clicking, son?")} />
+        <NodesList onClick={(event, id) => console.log("Are you clicking, son?")} />
     </List>
 </div>);
-const spisokRelation = (
+const relationsList = (
     <div>
         <List component="nav">
-            <ConstructorRelation onClick={(event, id) => console.log("Are you clicking, son?")} />
+            <RelationsList onClick={(event, id) => console.log("Are you clicking, son?")} />
         </List>
     </div>);
 function Editor() {
@@ -59,7 +59,7 @@ function Editor() {
                     },
                     {
                         title: 'Связи',
-                        body: spisokRelation
+                        body: relationsList
                     }
                 ]} />
                 <EditorRightMenuTab panels={[
@@ -76,8 +76,8 @@ function Editor() {
     return (
     <div>
         <GraphContainer/>
-        <AddMark opened={addMarkOpen} setOpen={setAddMarkOpen} />
-        <ActiveMarkSelectorWindow opened={activeMarkOpen} setOpen={setActiveMarkOpen} />
+        <AddMarkDialog opened={addMarkOpen} setOpen={setAddMarkOpen} />
+        <ActiveMarkSelectionDialog opened={activeMarkOpen} setOpen={setActiveMarkOpen} />
         <RelationMenu opened={isRelationMenuOpen} setOpen={setIsRelationMenuOpen} />
     </div>
     );

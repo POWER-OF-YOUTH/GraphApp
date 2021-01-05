@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { useAppEditor } from '../contexts/EditorContext';
 
-function ConstructorRelation({ onClick }) {
+function RelationsList({ onClick }) {
     const { relations, network, setSelectedEntity } = useAppEditor();
 
     function selectRelation(id) {
@@ -25,4 +25,4 @@ function ConstructorRelation({ onClick }) {
         </div>
     );
 }
-export default ConstructorRelation;
+export default RelationsList;
